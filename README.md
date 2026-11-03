@@ -1,5 +1,7 @@
 # MEEN Field Guide
 
+> Picking this project up? Start with [HANDOFF.md](HANDOFF.md).
+
 An unofficial study guide to the Texas A&M (College Station) BS in Mechanical Engineering.
 
 For every course it lists:
