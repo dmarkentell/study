@@ -54,6 +54,7 @@ The plan of study grid is the `PLAN` list near the top of `js/app.js`.
 The plan of study follows the current Texas A&M catalog. Some details are best estimates and are marked in the data:
 
 - prerequisites: confirm in Howdy
+- electives with a `note` field come from older (2019-20) lists or have unconfirmed details
 - technical elective titles and area assignments (`areaSure: false`): confirm with the current MEEN technical elective list from advising
 - difficulty and hour ratings: planning estimates, not official data
 

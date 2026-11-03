@@ -236,6 +236,7 @@
         (c.area ? '<span class="tag">' + AREA[c.area] + (c.areaSure ? '' : ' (area unconfirmed)') + '</span>' : '') +
         '<span class="tag">' + KIND[c.kind] + '</span>' +
       '</div>' +
+      (c.note ? '<p class="notice">' + esc(c.note) + '</p>' : '') +
       '<div class="two-col">' +
         '<section class="sec"><h2>Why it matters</h2><p>' + esc(c.why) + '</p></section>' +
         '<section class="sec"><h2>Before you start</h2>' +

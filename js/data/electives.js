@@ -7,7 +7,8 @@
  * The plan of study shows 12 technical-elective hours; up to 3 may be non-MEEN
  * with advisor approval.
  *
- * Titles come from the catalog and department lists where found. Area
+ * Titles come from the catalog and department lists where found. A `note`
+ * field flags entries from older lists or with unconfirmed details. Area
  * assignments marked areaSure: false are best guesses: check the current
  * MEEN technical elective list from advising before planning around them.
  * Elective offerings change every semester; check Howdy.
@@ -52,8 +53,8 @@ window.MEEN.courses.push(
   fe: ['Fluid Mechanics', 'Thermodynamics'], sw: ['EES', 'Python']
 },
 {
-  id: 'MEEN 421', title: 'Thermo-Fluids Analysis and Design', cr: 3, y: 4, s: 'Elective', kind: 'elective', area: 'thermo', areaSure: true, d: 4, h: 8,
-  pre: ['MEEN 315', 'MEEN 344'],
+  id: 'MEEN 421', title: 'Thermal-Fluids Analysis and Design', cr: 3, y: 4, s: 'Elective', kind: 'elective', area: 'thermo', areaSure: true, d: 4, h: 8,
+  pre: ['MEEN 461'],
   sum: 'Design of thermal-fluid systems: piping networks, pumps, heat exchangers, power and refrigeration systems, and system-level optimization.',
   why: 'Turns thermo, fluids and heat transfer into system design, which is what plant, HVAC and energy engineers do daily. It is also a prerequisite for MEEN 463.',
   know: ['Thermodynamics cycles', 'Pipe flow', 'Heat exchangers (helpful)'],
@@ -128,8 +129,129 @@ window.MEEN.courses.push(
   fe: ['Fluid Mechanics'], sw: ['Python', 'EES']
 },
 {
+  id: 'MEEN 404', title: 'Experimental Design and Data Analysis', cr: 3, y: 4, s: 'Elective', kind: 'elective', area: 'data', areaSure: true, d: 3, h: 8,
+  pre: ['MEEN 360', 'MEEN 361', 'MEEN 364', 'MEEN 461'],
+  note: 'Listed as a Data Science & Experimentation elective on the department curriculum page. Sources disagree on prerequisites (one also lists MEEN 401 or concurrent; the catalog entry lists MEEN 368 or equivalents), so check Howdy.',
+  sum: 'Planning and running engineering experiments and analyzing the data: design of experiments, statistical inference, regression, uncertainty, and data analysis in Python, with hands-on lab projects.',
+  why: 'Test, validation, quality and R&D engineers spend much of their time designing experiments and defending results with statistics. It is also the clearest way to satisfy the Data Science & Experimentation area.',
+  know: ['Statistics from STAT 211', 'Uncertainty analysis from MEEN 260', 'Python data processing', 'Lab experience from the junior labs'],
+  units: [
+    ['Planning experiments', 'objectives and hypotheses; variables and controls; test matrices; randomization and blocking; replication', 'Write the test plan, including how you will analyze the data, before touching hardware.', 'Why randomize run order? | What is blocking for?'],
+    ['Factorial designs', 'full and fractional factorial designs; main effects and interactions; response surfaces', 'Run a 2³ design by hand once, then in Python, and interpret every effect.', 'How many runs in a 2⁴ full factorial? | What does an interaction mean physically?'],
+    ['Statistical analysis', 'hypothesis tests; ANOVA; confidence intervals; regression and residual checks', 'For each result, state the effect size and the confidence, not just "significant".', 'What does ANOVA test? | What do patterned residuals tell you?'],
+    ['Uncertainty and data quality', 'measurement uncertainty; outliers; repeatability; reporting results', 'Carry uncertainty all the way into your final plots.', 'When can you remove an outlier? | How do you report a result with uncertainty?'],
+    ['Data analysis projects', 'processing large data sets; visualization; technical reports', 'Build a reusable Python pipeline: load, clean, analyze, plot.', 'How do you make an analysis reproducible? | What makes a figure readable?']
+  ],
+  top: ['Design of experiments', 'ANOVA and regression', 'Uncertainty reporting'],
+  take: ['A good experimental design gets more information from fewer tests.', 'Results need effect sizes and uncertainty to be useful for decisions.'],
+  real: ['Test and validation engineering', 'Process optimization in manufacturing', 'Quality and Six Sigma', 'R&D'],
+  pit: ['Changing one factor at a time and missing interactions', 'Analyzing data without a plan made in advance'],
+  res: [['book', 'Montgomery – Design and Analysis of Experiments', 'Montgomery Design and Analysis of Experiments'], ['book', 'Figliola & Beasley – Mechanical Measurements', 'Figliola Beasley mechanical measurements'], ['video', 'StatQuest with Josh Starmer', 'StatQuest ANOVA']],
+  fe: ['Probability and Statistics', 'Measurements, Instrumentation, and Controls'], sw: ['Python (pandas, statsmodels)', 'Minitab or JMP']
+},
+{
+  id: 'MEEN 435', title: 'Compressed Air Systems', cr: 3, y: 4, s: 'Elective', kind: 'elective', area: 'thermo', areaSure: false, d: 3, h: 6,
+  pre: ['MEEN 315', 'MEEN 344'],
+  note: 'Seen on the department curriculum page; area and prerequisites not confirmed.',
+  sum: 'Design and energy efficiency of industrial compressed air systems: compressors, treatment (drying and filtration), distribution piping, leaks, controls, and system audits.',
+  why: 'Compressed air is one of the most expensive utilities in manufacturing plants, so engineers who can audit and improve it save companies real money.',
+  know: ['Thermodynamics of compression', 'Pipe flow and pressure drop', 'Engineering economics'],
+  units: [
+    ['Compression', 'reciprocating, rotary screw and centrifugal compressors; compression work; intercooling; performance curves', 'Compute the specific power (kW per 100 cfm) for real compressor data sheets.', 'Why intercool? | Screw vs centrifugal: when to use each?'],
+    ['Air treatment', 'moisture and dew point; dryers; filters; condensate', 'Use psychrometrics to find how much water a compressor makes per day.', 'What is pressure dew point? | Refrigerated vs desiccant dryer?'],
+    ['Distribution and storage', 'piping design; pressure drop; receivers; demand', 'Size a header for a small plant and check pressure drop.', 'Why add storage? | Effect of undersized piping?'],
+    ['Audits and efficiency', 'leak detection; controls and sequencing; heat recovery; cost of air', 'Estimate the yearly cost of a single 1/8-inch leak.', 'What fraction of air is typically lost to leaks? | How does pressure setpoint affect energy?']
+  ],
+  top: ['Compression work', 'Pressure drop', 'Energy audits'],
+  take: ['Every psi and every leak costs energy; system-level fixes often pay back in months.'],
+  real: ['Manufacturing plant utilities', 'Energy consulting', 'Industrial equipment sales engineering'],
+  pit: [],
+  res: [['tool', 'Compressed Air Challenge resources', 'Compressed Air Challenge best practices'], ['tool', 'US DOE compressed air sourcebook', 'DOE improving compressed air system performance sourcebook']],
+  fe: ['Thermodynamics', 'Fluid Mechanics'], sw: ['Excel', 'EES']
+},
+{
+  id: 'MEEN 411', title: 'Mechanical Controls', cr: 3, y: 4, s: 'Elective', kind: 'elective', area: 'mms', areaSure: false, d: 4, h: 8,
+  pre: ['MEEN 364'],
+  note: 'Listed in the 2019-20 technical elective list (Mechanical & Manufacturing Systems). It may not be offered now; check Howdy.',
+  sum: 'Applied control of mechanical systems: actuators, hydraulic and pneumatic systems, motion control, and controller implementation.',
+  why: 'A practical follow-on to MEEN 364 for automation, heavy equipment and motion-control roles.',
+  know: ['Transfer functions and PID from MEEN 364', 'System modeling'],
+  units: [
+    ['Actuators', 'electric motors; hydraulic and pneumatic actuators; valves', 'Model one actuator in each energy domain.', 'Why use hydraulics for heavy loads? | What limits pneumatic precision?'],
+    ['Motion control', 'position and velocity loops; trajectory generation; feedforward', 'Simulate a cascaded position-velocity loop.', 'Why add feedforward? | Why cascade loops?'],
+    ['Nonlinear effects', 'saturation; backlash; friction; anti-windup', 'Add saturation to a simulation and watch integrator windup happen.', 'What is integrator windup? | How does backlash affect stability?'],
+    ['Implementation', 'digital control; sampling; PLCs and microcontrollers', 'Discretize a PID and run it on hardware or in code.', 'Effect of sample rate on a controller? | What does a PLC do?']
+  ],
+  top: ['Actuator models', 'Cascaded control', 'Anti-windup'],
+  take: ['Real controllers must handle saturation, friction and sampling.'],
+  real: ['Factory automation', 'Heavy equipment', 'Motion control'],
+  pit: [],
+  res: [['video', 'Brian Douglas – Control', 'Brian Douglas control systems'], ['book', 'Franklin & Powell – Feedback Control of Dynamic Systems', 'Franklin Powell Feedback Control of Dynamic Systems']],
+  fe: ['Measurements, Instrumentation, and Controls'], sw: ['MATLAB/Simulink', 'PLC software']
+},
+{
+  id: 'MEEN 467', title: 'Mechanical Behavior of Materials', cr: 3, y: 4, s: 'Elective', kind: 'elective', area: 'mms', areaSure: false, d: 4, h: 7,
+  pre: ['MEEN 368', 'MEEN 223'],
+  note: 'Listed in the 2019-20 technical elective list (Mechanical & Manufacturing Systems). Check Howdy for current offerings.',
+  sum: 'How and why materials deform and fail: plasticity, fracture mechanics, fatigue crack growth, creep, and design against failure.',
+  why: 'The base for failure analysis, damage tolerance in aerospace, and pressure equipment integrity in oil and gas.',
+  know: ['Stress transformation and failure theories', 'Dislocations and microstructure', 'Fatigue basics'],
+  units: [
+    ['Plasticity', 'yield criteria; strain hardening; true stress and strain', 'Convert engineering to true stress-strain for real data.', 'Why use true stress? | What is strain hardening?'],
+    ['Fracture mechanics', 'stress intensity factor; fracture toughness; LEFM; crack-tip plasticity', 'Use K = Yσ√(πa) to find a critical crack size.', 'Critical crack length for given K_IC? | Why are thick plates more brittle?'],
+    ['Fatigue', 'stress-life and strain-life; Paris law crack growth; damage tolerance', 'Integrate the Paris law to estimate inspection intervals.', 'What does the Paris law predict? | Safe-life vs damage tolerance?'],
+    ['Creep and high temperature', 'creep mechanisms; Larson-Miller parameter; stress rupture', 'Use Larson-Miller to compare service conditions.', 'When does creep matter? | What is Larson-Miller?']
+  ],
+  top: ['Stress intensity factor', 'Paris law', 'Creep'],
+  take: ['Cracks control failure; design with fracture mechanics, not just strength.'],
+  real: ['Aerospace damage tolerance', 'Pipeline and pressure vessel integrity', 'Failure analysis'],
+  pit: [],
+  res: [['book', 'Dowling – Mechanical Behavior of Materials', 'Dowling Mechanical Behavior of Materials'], ['book', 'Anderson – Fracture Mechanics', 'Anderson Fracture Mechanics Fundamentals and Applications']],
+  fe: ['Material Properties and Processing', 'Mechanics of Materials'], sw: []
+},
+{
+  id: 'MEEN 476', title: 'Nanoscale Issues in Manufacturing', cr: 3, y: 4, s: 'Elective', kind: 'elective', area: 'mms', areaSure: false, d: 3, h: 6,
+  pre: ['MEEN 360'],
+  note: 'Listed in the 2019-20 technical elective list (Mechanical & Manufacturing Systems). Check Howdy for current offerings.',
+  sum: 'Manufacturing at small scales: micro- and nanofabrication, thin films, surface forces, metrology, and how scale changes mechanics and heat transfer.',
+  why: 'Relevant to semiconductors, MEMS sensors and advanced materials, which are growing fast in Texas.',
+  know: ['Manufacturing processes', 'Materials science', 'Basic heat transfer'],
+  units: [
+    ['Scaling', 'surface-to-volume effects; adhesion and surface forces; size effects in properties', 'Compute how forces scale as size shrinks by 1000x.', 'Why does adhesion dominate at small scale? | Why are nanowires stronger?'],
+    ['Micro- and nanofabrication', 'lithography; deposition; etching; self-assembly', 'Draw a process flow for a simple MEMS cantilever.', 'Additive vs subtractive steps in fabrication? | Wet vs dry etching?'],
+    ['Metrology', 'SEM; AFM; optical methods; measurement limits', 'Match each instrument to what it can resolve.', 'What does an AFM measure? | Resolution limit of optical microscopy?'],
+    ['Applications', 'MEMS; semiconductor manufacturing; nanocomposites', 'Pick one device and explain how it is made.', 'How is an accelerometer chip made? | What limits yield in a fab?']
+  ],
+  top: ['Scaling laws', 'Fabrication process flows', 'Metrology'],
+  take: ['At small scales, surface effects dominate and normal intuition breaks down.'],
+  real: ['Semiconductor fabs', 'MEMS sensors', 'Advanced materials'],
+  pit: [],
+  res: [['book', 'Madou – Fundamentals of Microfabrication', 'Madou Fundamentals of Microfabrication']],
+  fe: ['Material Properties and Processing'], sw: []
+},
+{
+  id: 'MEEN 496', title: 'Laser Material Processing', cr: 3, y: 4, s: 'Elective', kind: 'elective', area: 'mms', areaSure: false, d: 3, h: 6,
+  pre: ['MEEN 360', 'MEEN 461'],
+  note: 'Seen on the department curriculum page; area and prerequisites not confirmed.',
+  sum: 'Using lasers to cut, weld, harden, and additively manufacture metals: laser physics basics, laser-material interaction, heat transfer, and process selection.',
+  why: 'Laser welding, cutting and metal 3D printing are core processes in aerospace, automotive, EV battery and medical device manufacturing.',
+  know: ['Heat transfer (conduction)', 'Manufacturing processes', 'Phase transformations in metals'],
+  units: [
+    ['Laser basics', 'how lasers work; beam quality; focusing; laser types (fiber, CO₂, diode)', 'Relate spot size and power to intensity.', 'Why do fiber lasers dominate metal cutting? | What is beam quality M²?'],
+    ['Laser-material interaction', 'absorption; heating; melting; vaporization; keyhole formation', 'Estimate the time to melt a spot with a simple heat-transfer model.', 'Why is copper hard to laser weld? | What is a keyhole?'],
+    ['Processes', 'cutting; welding; surface hardening; cladding; marking', 'Compare process windows (power vs speed) for each process.', 'Conduction vs keyhole welding? | Why harden with a laser?'],
+    ['Additive manufacturing', 'powder bed fusion; directed energy deposition; defects; residual stress', 'Link defects (porosity, cracking) to process parameters.', 'What causes lack-of-fusion porosity? | Why do AM parts warp?']
+  ],
+  top: ['Absorption and heating', 'Process windows', 'Metal AM'],
+  take: ['Laser processes are controlled heat-transfer problems; parameters set quality.'],
+  real: ['EV battery welding', 'Aerospace metal AM', 'Medical devices'],
+  pit: [],
+  res: [['book', 'Steen – Laser Material Processing', 'Steen Laser Material Processing']],
+  fe: ['Material Properties and Processing', 'Heat Transfer'], sw: []
+},
+{
   id: 'MEEN 423', title: 'Machine Learning for Mechanical Engineers', cr: 3, y: 4, s: 'Elective', kind: 'elective', area: 'data', areaSure: false, d: 4, h: 8,
-  pre: ['MEEN 357', 'STAT 211'],
+  pre: ['MEEN 357'],
   sum: 'Supervised and unsupervised learning applied to mechanical engineering data: regression, classification, neural networks, and model validation, using Python.',
   why: 'Data and ML skills are in demand in every ME industry (predictive maintenance, surrogate models, manufacturing quality).',
   know: ['Python with NumPy', 'Linear algebra', 'Statistics', 'Least squares'],
