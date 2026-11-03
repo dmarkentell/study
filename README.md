@@ -43,7 +43,7 @@ All content is in `js/data/`:
 | --- | --- |
 | `support.js` | math, science and common-engineering courses (field key at the top) |
 | `core.js` | required MEEN courses |
-| `electives.js` | MEEN technical electives and the area rule |
+| `electives.js`, `electives2.js` | MEEN technical and general electives, the area rule, and pre-approved non-MEEN electives |
 | `tracks.js` | career tracks, FE knowledge areas and the internship timeline |
 | `flashcards.js` | formula flashcards |
 
@@ -54,8 +54,8 @@ The plan of study grid is the `PLAN` list near the top of `js/app.js`.
 The plan of study follows the current Texas A&M catalog. Some details are best estimates and are marked in the data:
 
 - prerequisites: confirm in Howdy
-- electives with a `note` field come from older (2019-20) lists or have unconfirmed details
-- technical elective titles and area assignments (`areaSure: false`): confirm with the current MEEN technical elective list from advising
+- electives with a `note` field are not on the current list or have extra prerequisite details
+- technical electives: titles, areas and prerequisites follow the department's current list on engineering.tamu.edu; unit outlines for electives are typical content, not syllabi
 - difficulty and hour ratings: planning estimates, not official data
 
 Corrections are welcome: edit the data files.

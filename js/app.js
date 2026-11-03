@@ -25,7 +25,8 @@
   var TERM_ORDER = {};
   PLAN.forEach(function (t, i) { t.items.forEach(function (id) { if (id[0] !== '#') TERM_ORDER[id] = i; }); });
 
-  var AREA = { thermo: 'Thermo-fluids Systems', data: 'Data Science & Experimentation', mms: 'Mechanical & Manufacturing Systems' };
+  var AREA = { thermo: 'Thermo-fluids Systems', data: 'Data Science & Experimentation', mms: 'Mechanical & Manufacturing Systems', general: 'General elective' };
+  var TECH_AREAS = ['thermo', 'data', 'mms'];
   var KIND = { support: 'Foundation', core: 'MEEN core', elective: 'Technical elective' };
   var DWORD = { 1: 'Light', 2: 'Moderate', 3: 'Solid', 4: 'Hard', 5: 'Very hard' };
   var YEAR = { 1: 'First year', 2: 'Second year', 3: 'Third year', 4: 'Fourth year' };
@@ -119,6 +120,7 @@
     var ud = unitsDone(c.id).length, pct = Math.round(100 * ud / c.units.length);
     var tags = '<span class="tag">' + KIND[c.kind] + '</span>';
     if (c.area) tags += '<span class="tag">' + AREA[c.area] + (c.areaSure ? '' : '?') + '</span>';
+    if (c.ft) tags += '<span class="tag" title="May be stacked with a graduate course for Fast Track">Fast Track</span>';
     if (isDone(c.id)) tags += '<span class="tag done">Completed</span>';
     return '<a class="card' + (isDone(c.id) ? ' done' : '') + '" href="' + href(c.id) + '">' +
       '<span class="cid">' + esc(c.id) + ' · ' + c.cr + ' cr</span>' +
@@ -199,11 +201,18 @@
         '<p class="label">' + plural(list.length, 'course') + '</p>' +
         (list.length ? '<div class="grid-cards">' + list.map(card).join('') + '</div>' : '<p>No courses match. Clear the search or filters.</p>') +
       '</section>' +
-      (kind === 'elective' || area !== 'all' ? electiveNote() : '');
+      (kind === 'elective' || area !== 'all' ? electiveNote() + nonMeenTable() : '');
   }
 
   function electiveNote() {
-    return '<p class="notice">Degree rule: at least three MEEN technical electives, with at least one from each area (Thermo-fluids Systems, Data Science &amp; Experimentation, Mechanical &amp; Manufacturing Systems). The plan of study shows 12 technical-elective hours. A "?" after an area means the assignment is a best guess. Confirm with the current MEEN technical elective list from advising and check Howdy for what is offered each term.</p>';
+    return '<p class="notice">Degree rule: at least three MEEN technical electives, with at least one from each area (Thermo-fluids Systems, Data Science &amp; Experimentation, Mechanical &amp; Manufacturing Systems). The plan of study shows 12 technical-elective hours, and up to 3 of them may be non-MEEN. Areas and prerequisites follow the department\'s current technical elective list. "Fast Track" courses may be stacked with a graduate course. Check Howdy for what is offered each term.</p>';
+  }
+  function nonMeenTable() {
+    return '<section class="sec"><h2>Non-MEEN technical electives <span class="label">no more than 3 hours</span></h2>' +
+      '<p>Pre-approved by the department. Other courses need approval from MEEN advising (they must have a discipline-specific prerequisite, use advanced math and be quantitative).</p>' +
+      '<div class="tablewrap"><table><thead><tr><th>Department</th><th>Courses</th></tr></thead><tbody>' +
+      (M.nonMeen || []).map(function (r) { return '<tr><td>' + esc(r[0]) + '</td><td>' + esc(r[1]) + '</td></tr>'; }).join('') +
+      '</tbody></table></div></section>';
   }
 
   function viewCourse(id) {
@@ -234,6 +243,7 @@
       '<div class="row">' +
         '<button type="button" class="btn' + (isDone(c.id) ? ' ghost' : '') + '" data-done="' + esc(c.id) + '">' + (isDone(c.id) ? 'Mark as not completed' : 'Mark course completed') + '</button>' +
         (c.area ? '<span class="tag">' + AREA[c.area] + (c.areaSure ? '' : ' (area unconfirmed)') + '</span>' : '') +
+        (c.ft ? '<span class="tag" title="May be stacked with a graduate course for Fast Track">Fast Track eligible</span>' : '') +
         '<span class="tag">' + KIND[c.kind] + '</span>' +
       '</div>' +
       (c.note ? '<p class="notice">' + esc(c.note) + '</p>' : '') +
@@ -331,7 +341,7 @@
     }
     var areas = {};
     t.electives.forEach(function (e) { var c = BY_ID[e]; if (c && c.area) areas[c.area] = true; });
-    var missing = Object.keys(AREA).filter(function (a) { return !areas[a]; });
+    var missing = TECH_AREAS.filter(function (a) { return !areas[a]; });
     function ul(a) { return '<ul>' + a.map(function (x) { return '<li>' + esc(x) + '</li>'; }).join('') + '</ul>'; }
     return '<p><a href="#tracks">← All tracks</a></p>' +
       '<section class="stack"><span class="label">Career track</span><h1>' + esc(t.name) + '</h1><p>' + esc(t.blurb) + '</p></section>' +
@@ -398,7 +408,7 @@
         '<p class="muted">Total = credit hours (time in class) + estimated outside hours. Estimates assume you are aiming for a B+ or better.</p>' +
       '</section>' +
       '<section class="sec"><h2>Technical elective areas <span class="label">completed + planned</span></h2>' +
-        '<div class="load">' + Object.keys(AREA).map(function (a) {
+        '<div class="load">' + TECH_AREAS.map(function (a) {
           return '<div><span class="label">' + AREA[a] + '</span><span class="big" style="color:var(' + (have[a] ? '--d1' : '--d5') + ')">' + (have[a] || 0) + '</span></div>';
         }).join('') + '</div><p class="muted">You need at least one MEEN elective in each area and at least three MEEN electives in total.</p></section>' +
       '<section class="sec"><h2>Pick next semester</h2><div class="picklist">' + notDone.map(function (c) { return pick(c, state.plan, 'plan'); }).join('') + '</div></section>' +

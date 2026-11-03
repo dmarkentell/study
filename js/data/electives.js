@@ -7,16 +7,16 @@
  * The plan of study shows 12 technical-elective hours; up to 3 may be non-MEEN
  * with advisor approval.
  *
- * Titles come from the catalog and department lists where found. A `note`
- * field flags entries from older lists or with unconfirmed details. Area
- * assignments marked areaSure: false are best guesses: check the current
- * MEEN technical elective list from advising before planning around them.
+ * Titles, areas and prerequisites follow the department's current technical
+ * elective list (engineering.tamu.edu MEEN curriculum page). A `note` field
+ * flags courses not on that list or with extra prerequisite details.
+ * Unit outlines are typical content for each course; syllabi vary.
  * Elective offerings change every semester; check Howdy.
  */
 window.MEEN.courses.push(
 {
-  id: 'MEEN 410', title: 'Internal Combustion Engines', cr: 3, y: 4, s: 'Elective', kind: 'elective', area: 'thermo', areaSure: true, d: 3, h: 7,
-  pre: ['MEEN 315', 'MEEN 344'],
+  id: 'MEEN 410', title: 'Internal Combustion Engines', cr: 3, y: 4, s: 'Elective', kind: 'elective', ft: true, area: 'thermo', areaSure: true, d: 3, h: 7,
+  pre: ['MEEN 344'],
   sum: 'Spark- and compression-ignition engine cycles, combustion, fuel-air mixing, emissions, performance testing and engine design.',
   why: 'Direct path to automotive, motorsport, heavy equipment, marine and power generation (gas engines).',
   know: ['Otto and Diesel cycles', 'First law for control volumes', 'Combustion stoichiometry'],
@@ -34,7 +34,8 @@ window.MEEN.courses.push(
   fe: ['Thermodynamics'], sw: ['GT-Power (industry)', 'EES']
 },
 {
-  id: 'MEEN 414', title: 'Principles of Turbomachinery', cr: 3, y: 4, s: 'Elective', kind: 'elective', area: 'thermo', areaSure: true, d: 4, h: 8,
+  id: 'MEEN 414', title: 'Principles of Turbomachinery', cr: 3, y: 4, s: 'Elective', kind: 'elective', area: null, areaSure: true, d: 4, h: 8,
+  note: 'Not on the current department technical elective list. It may not be offered or may not count toward the elective areas; check with MEEN advising before planning on it.',
   pre: ['MEEN 315', 'MEEN 344'],
   sum: 'Pumps, fans, compressors and turbines: velocity triangles, Euler turbomachinery equation, similarity laws, performance curves and an intro to blade design.',
   why: 'Texas has a lot of rotating-equipment work (oil and gas, power, aerospace), and Texas A&M has a long-running turbomachinery research lab and industry symposium.',
@@ -73,7 +74,7 @@ window.MEEN.courses.push(
 },
 {
   id: 'MEEN 437', title: 'Principles of Building Energy Analysis', cr: 3, y: 4, s: 'Elective', kind: 'elective', area: 'thermo', areaSure: true, d: 3, h: 6,
-  pre: ['MEEN 315', 'MEEN 461'],
+  pre: ['MEEN 315'],
   sum: 'Building heating and cooling loads, psychrometrics, HVAC systems, energy simulation and efficiency measures.',
   why: 'HVAC and building energy is one of the most stable ME job markets and a common path to a PE license.',
   know: ['Psychrometrics basics', 'Heat transfer (conduction, convection)', 'Refrigeration cycles'],
@@ -91,7 +92,7 @@ window.MEEN.courses.push(
   fe: ['Thermodynamics', 'Heat Transfer'], sw: ['EnergyPlus', 'Trane TRACE / Carrier HAP']
 },
 {
-  id: 'MEEN 463', title: 'Cogeneration Systems', cr: 3, y: 4, s: 'Elective', kind: 'elective', area: 'thermo', areaSure: true, d: 3, h: 6,
+  id: 'MEEN 463', title: 'Cogeneration Systems', cr: 3, y: 4, s: 'Elective', kind: 'elective', ft: true, area: 'thermo', areaSure: true, d: 3, h: 6,
   pre: ['MEEN 421'],
   sum: 'Combined heat and power: gas turbines, engines, heat recovery steam generators, absorption chillers, and economic analysis of cogeneration plants.',
   why: 'Useful for power, petrochemical and campus-energy careers. Texas A&M runs its own campus combined heat and power plant.',
@@ -110,7 +111,7 @@ window.MEEN.courses.push(
   fe: ['Thermodynamics'], sw: ['EES', 'Excel']
 },
 {
-  id: 'MEEN 472', title: 'Gas Dynamics', cr: 3, y: 4, s: 'Elective', kind: 'elective', area: 'thermo', areaSure: true, d: 4, h: 8,
+  id: 'MEEN 472', title: 'Gas Dynamics', cr: 3, y: 4, s: 'Elective', kind: 'elective', ft: true, area: 'thermo', areaSure: true, d: 4, h: 8,
   pre: ['MEEN 344'],
   sum: 'Compressible flow: isentropic flow, nozzles, normal and oblique shocks, expansion waves, and flow with friction and heat addition (Fanno and Rayleigh).',
   why: 'Required knowledge for rockets, jet engines, high-pressure gas systems, relief valves and supersonic aircraft.',
@@ -130,8 +131,7 @@ window.MEEN.courses.push(
 },
 {
   id: 'MEEN 404', title: 'Experimental Design and Data Analysis', cr: 3, y: 4, s: 'Elective', kind: 'elective', area: 'data', areaSure: true, d: 3, h: 8,
-  pre: ['MEEN 360', 'MEEN 361', 'MEEN 364', 'MEEN 461'],
-  note: 'Listed as a Data Science & Experimentation elective on the department curriculum page. Sources disagree on prerequisites (one also lists MEEN 401 or concurrent; the catalog entry lists MEEN 368 or equivalents), so check Howdy.',
+  pre: ['MEEN 345', 'MEEN 361'],
   sum: 'Planning and running engineering experiments and analyzing the data: design of experiments, statistical inference, regression, uncertainty, and data analysis in Python, with hands-on lab projects.',
   why: 'Test, validation, quality and R&D engineers spend much of their time designing experiments and defending results with statistics. It is also the clearest way to satisfy the Data Science & Experimentation area.',
   know: ['Statistics from STAT 211', 'Uncertainty analysis from MEEN 260', 'Python data processing', 'Lab experience from the junior labs'],
@@ -150,9 +150,8 @@ window.MEEN.courses.push(
   fe: ['Probability and Statistics', 'Measurements, Instrumentation, and Controls'], sw: ['Python (pandas, statsmodels)', 'Minitab or JMP']
 },
 {
-  id: 'MEEN 435', title: 'Compressed Air Systems', cr: 3, y: 4, s: 'Elective', kind: 'elective', area: 'thermo', areaSure: false, d: 3, h: 6,
-  pre: ['MEEN 315', 'MEEN 344'],
-  note: 'Seen on the department curriculum page; area and prerequisites not confirmed.',
+  id: 'MEEN 435', title: 'Compressed Air Systems', cr: 3, y: 4, s: 'Elective', kind: 'elective', area: 'thermo', areaSure: true, d: 3, h: 6,
+  pre: ['MEEN 315'],
   sum: 'Design and energy efficiency of industrial compressed air systems: compressors, treatment (drying and filtration), distribution piping, leaks, controls, and system audits.',
   why: 'Compressed air is one of the most expensive utilities in manufacturing plants, so engineers who can audit and improve it save companies real money.',
   know: ['Thermodynamics of compression', 'Pipe flow and pressure drop', 'Engineering economics'],
@@ -170,9 +169,8 @@ window.MEEN.courses.push(
   fe: ['Thermodynamics', 'Fluid Mechanics'], sw: ['Excel', 'EES']
 },
 {
-  id: 'MEEN 411', title: 'Mechanical Controls', cr: 3, y: 4, s: 'Elective', kind: 'elective', area: 'mms', areaSure: false, d: 4, h: 8,
+  id: 'MEEN 411', title: 'Mechanical Controls', cr: 3, y: 4, s: 'Elective', kind: 'elective', area: 'mms', areaSure: true, d: 4, h: 8,
   pre: ['MEEN 364'],
-  note: 'Listed in the 2019-20 technical elective list (Mechanical & Manufacturing Systems). It may not be offered now; check Howdy.',
   sum: 'Applied control of mechanical systems: actuators, hydraulic and pneumatic systems, motion control, and controller implementation.',
   why: 'A practical follow-on to MEEN 364 for automation, heavy equipment and motion-control roles.',
   know: ['Transfer functions and PID from MEEN 364', 'System modeling'],
@@ -190,9 +188,8 @@ window.MEEN.courses.push(
   fe: ['Measurements, Instrumentation, and Controls'], sw: ['MATLAB/Simulink', 'PLC software']
 },
 {
-  id: 'MEEN 467', title: 'Mechanical Behavior of Materials', cr: 3, y: 4, s: 'Elective', kind: 'elective', area: 'mms', areaSure: false, d: 4, h: 7,
-  pre: ['MEEN 368', 'MEEN 223'],
-  note: 'Listed in the 2019-20 technical elective list (Mechanical & Manufacturing Systems). Check Howdy for current offerings.',
+  id: 'MEEN 467', title: 'Mechanical Behavior of Materials', cr: 3, y: 4, s: 'Elective', kind: 'elective', ft: true, area: 'mms', areaSure: true, d: 4, h: 7,
+  pre: ['MEEN 360', 'MEEN 361'],
   sum: 'How and why materials deform and fail: plasticity, fracture mechanics, fatigue crack growth, creep, and design against failure.',
   why: 'The base for failure analysis, damage tolerance in aerospace, and pressure equipment integrity in oil and gas.',
   know: ['Stress transformation and failure theories', 'Dislocations and microstructure', 'Fatigue basics'],
@@ -210,9 +207,9 @@ window.MEEN.courses.push(
   fe: ['Material Properties and Processing', 'Mechanics of Materials'], sw: []
 },
 {
-  id: 'MEEN 476', title: 'Nanoscale Issues in Manufacturing', cr: 3, y: 4, s: 'Elective', kind: 'elective', area: 'mms', areaSure: false, d: 3, h: 6,
+  id: 'MEEN 476', title: 'Nanoscale Issues in Manufacturing', cr: 3, y: 4, s: 'Elective', kind: 'elective', area: null, areaSure: true, d: 3, h: 6,
+  note: 'Not on the current department technical elective list (it appeared on the 2019-20 list). Check with MEEN advising before planning on it.',
   pre: ['MEEN 360'],
-  note: 'Listed in the 2019-20 technical elective list (Mechanical & Manufacturing Systems). Check Howdy for current offerings.',
   sum: 'Manufacturing at small scales: micro- and nanofabrication, thin films, surface forces, metrology, and how scale changes mechanics and heat transfer.',
   why: 'Relevant to semiconductors, MEMS sensors and advanced materials, which are growing fast in Texas.',
   know: ['Manufacturing processes', 'Materials science', 'Basic heat transfer'],
@@ -230,9 +227,8 @@ window.MEEN.courses.push(
   fe: ['Material Properties and Processing'], sw: []
 },
 {
-  id: 'MEEN 496', title: 'Laser Material Processing', cr: 3, y: 4, s: 'Elective', kind: 'elective', area: 'mms', areaSure: false, d: 3, h: 6,
-  pre: ['MEEN 360', 'MEEN 461'],
-  note: 'Seen on the department curriculum page; area and prerequisites not confirmed.',
+  id: 'MEEN 496', title: 'Laser Material Processing for Manufacturing', cr: 3, y: 4, s: 'Elective', kind: 'elective', ft: true, area: 'thermo', areaSure: true, d: 3, h: 6,
+  pre: ['MEEN 315'],
   sum: 'Using lasers to cut, weld, harden, and additively manufacture metals: laser physics basics, laser-material interaction, heat transfer, and process selection.',
   why: 'Laser welding, cutting and metal 3D printing are core processes in aerospace, automotive, EV battery and medical device manufacturing.',
   know: ['Heat transfer (conduction)', 'Manufacturing processes', 'Phase transformations in metals'],
@@ -250,7 +246,7 @@ window.MEEN.courses.push(
   fe: ['Material Properties and Processing', 'Heat Transfer'], sw: []
 },
 {
-  id: 'MEEN 423', title: 'Machine Learning for Mechanical Engineers', cr: 3, y: 4, s: 'Elective', kind: 'elective', area: 'data', areaSure: false, d: 4, h: 8,
+  id: 'MEEN 423', title: 'Machine Learning for Mechanical Engineers', cr: 3, y: 4, s: 'Elective', kind: 'elective', area: 'data', areaSure: true, d: 4, h: 8,
   pre: ['MEEN 357'],
   sum: 'Supervised and unsupervised learning applied to mechanical engineering data: regression, classification, neural networks, and model validation, using Python.',
   why: 'Data and ML skills are in demand in every ME industry (predictive maintenance, surrogate models, manufacturing quality).',
@@ -269,8 +265,8 @@ window.MEEN.courses.push(
   fe: ['Probability and Statistics'], sw: ['Python (scikit-learn, PyTorch)']
 },
 {
-  id: 'MEEN 408', title: 'Mechanics of Robotic Manipulators (Introduction to Robotics)', cr: 3, y: 4, s: 'Elective', kind: 'elective', area: 'mms', areaSure: false, d: 4, h: 8,
-  pre: ['MEEN 363', 'MEEN 357'],
+  id: 'MEEN 408', title: 'Introduction to Robotics', cr: 3, y: 4, s: 'Elective', kind: 'elective', ft: true, area: 'mms', areaSure: true, d: 4, h: 8,
+  pre: ['MEEN 364'],
   sum: 'Kinematics, dynamics and control of robot arms: transforms, forward and inverse kinematics, Jacobians, trajectory planning and robot control.',
   why: 'Core course for robotics, automation and manufacturing careers.',
   know: ['Linear algebra (matrices, rotations)', 'Rigid-body dynamics', 'Controls basics', 'Python/MATLAB'],
@@ -288,8 +284,8 @@ window.MEEN.courses.push(
   fe: ['Dynamics, Kinematics, and Vibrations', 'Measurements, Instrumentation, and Controls'], sw: ['Python', 'MATLAB Robotics Toolbox', 'ROS']
 },
 {
-  id: 'MEEN 412', title: 'Precision Machine Design', cr: 3, y: 4, s: 'Elective', kind: 'elective', area: 'mms', areaSure: false, d: 4, h: 7,
-  pre: ['MEEN 368', 'MEEN 360'],
+  id: 'MEEN 412', title: 'Principles of Precision Machine Design', cr: 3, y: 4, s: 'Elective', kind: 'elective', area: 'mms', areaSure: true, d: 4, h: 7,
+  pre: ['MEEN 260', 'MEEN 363', 'MEEN 364'],
   sum: 'Design of machines with high accuracy: error budgets, kinematic coupling, flexures, bearings, thermal effects and metrology.',
   why: 'Highly relevant for semiconductor equipment, optics, metrology and advanced manufacturing.',
   know: ['Solid mechanics', 'Tolerancing', 'Heat transfer basics'],
@@ -307,7 +303,7 @@ window.MEEN.courses.push(
   fe: ['Mechanical Design and Analysis'], sw: ['SolidWorks', 'FEA']
 },
 {
-  id: 'MEEN 431', title: 'Advanced System Dynamics and Controls', cr: 3, y: 4, s: 'Elective', kind: 'elective', area: 'mms', areaSure: false, d: 5, h: 9,
+  id: 'MEEN 431', title: 'Advanced System Dynamics and Controls', cr: 3, y: 4, s: 'Elective', kind: 'elective', area: 'mms', areaSure: true, d: 5, h: 9,
   pre: ['MEEN 364'],
   sum: 'State-space modeling, controllability and observability, pole placement, observers, optimal control (LQR), and digital control.',
   why: 'The next step after MEEN 364 for controls, robotics, aerospace GNC and autonomy roles, and a good base for graduate study.',
@@ -326,8 +322,8 @@ window.MEEN.courses.push(
   fe: ['Measurements, Instrumentation, and Controls'], sw: ['MATLAB/Simulink', 'python-control']
 },
 {
-  id: 'MEEN 432', title: 'Automotive Engineering', cr: 3, y: 4, s: 'Elective', kind: 'elective', area: 'mms', areaSure: false, d: 3, h: 7,
-  pre: ['MEEN 363', 'MEEN 364'],
+  id: 'MEEN 432', title: 'Automotive Engineering', cr: 3, y: 4, s: 'Elective', kind: 'elective', area: 'mms', areaSure: true, d: 3, h: 7,
+  pre: ['MEEN 363'],
   sum: 'Vehicle dynamics and powertrains: longitudinal performance, braking, tire mechanics, handling, ride and suspension, and electrified powertrains, often with simulation projects.',
   why: 'Main elective for automotive, EV and motorsport careers. Pairs well with Formula SAE.',
   know: ['Dynamics', 'Vibrations', 'Controls basics', 'MATLAB/Simulink'],
@@ -345,8 +341,8 @@ window.MEEN.courses.push(
   fe: ['Dynamics, Kinematics, and Vibrations'], sw: ['MATLAB/Simulink', 'CarSim (industry)']
 },
 {
-  id: 'MEEN 433', title: 'Mechatronics', cr: 3, y: 4, s: 'Elective', kind: 'elective', area: 'mms', areaSure: false, d: 4, h: 9,
-  pre: ['MEEN 364', 'ECEN 215'],
+  id: 'MEEN 433', title: 'Mechatronics', cr: 3, y: 4, s: 'Elective', kind: 'elective', ft: true, area: 'data', areaSure: true, d: 4, h: 9,
+  pre: ['MEEN 364'],
   sum: 'Integrating mechanical systems with electronics, sensors, actuators and microcontrollers; embedded programming and a hands-on mechatronic project.',
   why: 'Very practical for robotics, consumer products, automation and medical devices. Lab-heavy and great for building a portfolio.',
   know: ['Circuits', 'Sensors from MEEN 260', 'Controls', 'Basic C or Python'],
@@ -364,7 +360,7 @@ window.MEEN.courses.push(
   fe: ['Measurements, Instrumentation, and Controls', 'Electricity and Magnetism'], sw: ['Arduino/C', 'MATLAB', 'KiCad']
 },
 {
-  id: 'MEEN 434', title: 'Dynamics and Modeling of Mechatronic Systems', cr: 3, y: 4, s: 'Elective', kind: 'elective', area: 'mms', areaSure: false, d: 4, h: 8,
+  id: 'MEEN 434', title: 'Dynamics and Modeling of Mechatronic Systems', cr: 3, y: 4, s: 'Elective', kind: 'elective', ft: true, area: 'mms', areaSure: true, d: 4, h: 8,
   pre: ['MEEN 364'],
   sum: 'Modeling multi-domain systems (mechanical, electrical, hydraulic, thermal), often with bond graphs or energy-based methods, plus simulation and parameter identification.',
   why: 'Useful for system-level engineering, simulation roles and hydraulic or electromechanical system design.',
@@ -383,7 +379,7 @@ window.MEEN.courses.push(
   fe: ['Measurements, Instrumentation, and Controls'], sw: ['MATLAB/Simulink/Simscape', 'Modelica']
 },
 {
-  id: 'MEEN 440', title: 'Bio-inspired Engineering Design', cr: 3, y: 4, s: 'Elective', kind: 'elective', area: 'mms', areaSure: false, d: 3, h: 6,
+  id: 'MEEN 440', title: 'Bio-Inspired Design', cr: 3, y: 4, s: 'Elective', kind: 'elective', ft: true, area: 'mms', areaSure: true, d: 3, h: 6,
   pre: ['MEEN 368'],
   sum: 'Design methods that borrow from biological systems: structures, materials, locomotion and sensing in nature, applied to engineering design projects.',
   why: 'Good for biomedical, soft robotics and innovative product design interests.',
@@ -402,7 +398,7 @@ window.MEEN.courses.push(
   fe: ['Mechanical Design and Analysis'], sw: ['SolidWorks', '3D printing']
 },
 {
-  id: 'MEEN 441', title: 'Design of Mechanical Components', cr: 3, y: 4, s: 'Elective', kind: 'elective', area: 'mms', areaSure: false, d: 4, h: 8,
+  id: 'MEEN 441', title: 'Design of Mechanical Components and Systems', cr: 3, y: 4, s: 'Elective', kind: 'elective', area: 'mms', areaSure: true, d: 4, h: 8,
   pre: ['MEEN 368'],
   sum: 'Detailed design of machine elements: gears, bearings, shafts, fasteners, welds, springs, clutches, brakes and belts, with design projects.',
   why: 'The most directly useful elective for a product or machine design engineer. It also covers much of the PE Machine Design exam.',
@@ -421,8 +417,8 @@ window.MEEN.courses.push(
   fe: ['Mechanical Design and Analysis'], sw: ['SolidWorks', 'Excel', 'KISSsoft (industry)']
 },
 {
-  id: 'MEEN 442', title: 'Computer-Aided Engineering', cr: 3, y: 4, s: 'Elective', kind: 'elective', area: 'mms', areaSure: false, d: 3, h: 7,
-  pre: ['MEEN 368', 'MEEN 357'],
+  id: 'MEEN 442', title: 'Computer-Aided Engineering', cr: 3, y: 4, s: 'Elective', kind: 'elective', ft: true, area: 'mms', areaSure: true, d: 3, h: 7,
+  pre: ['MEEN 363', 'MEEN 368'],
   sum: 'Using CAE tools in design: parametric modeling, simulation-driven design, FEA and CFD workflows, design optimization and automation.',
   why: 'Simulation skills are in demand across aerospace, automotive, energy and consumer products.',
   know: ['CAD', 'Solid mechanics', 'Numerical methods'],
@@ -440,8 +436,8 @@ window.MEEN.courses.push(
   fe: ['Mechanical Design and Analysis'], sw: ['SolidWorks', 'ANSYS', 'Python']
 },
 {
-  id: 'MEEN 444', title: 'Finite Element Analysis', cr: 3, y: 4, s: 'Elective', kind: 'elective', area: 'mms', areaSure: false, d: 4, h: 9,
-  pre: ['MEEN 368', 'MEEN 357'],
+  id: 'MEEN 444', title: 'Finite Element Analysis in Mechanical Engineering', cr: 3, y: 4, s: 'Elective', kind: 'elective', area: 'mms', areaSure: true, d: 4, h: 9,
+  pre: ['MEEN 357', 'MEEN 368'],
   sum: 'Theory and practice of FEA: element formulations, stiffness matrices, isoparametric elements, 2D/3D solid elements, heat transfer, dynamics, and commercial software.',
   why: 'FEA is the most common simulation tool in mechanical engineering. Knowing the theory makes you a much better analyst.',
   know: ['Linear algebra', 'Solid mechanics', 'Numerical methods'],
@@ -459,8 +455,8 @@ window.MEEN.courses.push(
   fe: ['Mechanical Design and Analysis'], sw: ['ANSYS', 'Abaqus', 'Python']
 },
 {
-  id: 'MEEN 445', title: 'Mechanics of Compliant Materials', cr: 3, y: 4, s: 'Elective', kind: 'elective', area: 'mms', areaSure: false, d: 4, h: 7,
-  pre: ['MEEN 368'],
+  id: 'MEEN 445', title: 'Mechanics of Compliant Materials', cr: 3, y: 4, s: 'Elective', kind: 'elective', ft: true, area: 'mms', areaSure: true, d: 4, h: 7,
+  pre: ['MEEN 344'],
   sum: 'Large-deformation behavior of soft materials such as elastomers, gels, polymers and biological tissue: hyperelasticity, viscoelasticity and applications.',
   why: 'Relevant to soft robotics, biomedical devices, seals and tires.',
   know: ['Solid mechanics', 'Linear algebra', 'Stress-strain behavior'],
@@ -478,8 +474,8 @@ window.MEEN.courses.push(
   fe: ['Mechanics of Materials', 'Material Properties and Processing'], sw: ['Abaqus', 'Python']
 },
 {
-  id: 'MEEN 454', title: 'Tribology', cr: 3, y: 4, s: 'Elective', kind: 'elective', area: 'mms', areaSure: false, d: 3, h: 6,
-  pre: ['MEEN 368', 'MEEN 344'],
+  id: 'MEEN 454', title: 'Tribology – Mechanical Interface Design', cr: 3, y: 4, s: 'Elective', kind: 'elective', ft: true, area: 'mms', areaSure: true, d: 3, h: 6,
+  pre: ['MEEN 344', 'MEEN 368'],
   sum: 'Friction, wear and lubrication: surface contact, hydrodynamic and elastohydrodynamic lubrication, bearing design and wear mechanisms.',
   why: 'Friction and wear limit the life of bearings, engines, drilling tools and many other machines.',
   know: ['Contact mechanics basics', 'Fluid viscosity', 'Materials'],
@@ -497,7 +493,7 @@ window.MEEN.courses.push(
   fe: ['Mechanical Design and Analysis', 'Material Properties and Processing'], sw: []
 },
 {
-  id: 'MEEN 455', title: 'Engineering with Plastics', cr: 3, y: 4, s: 'Elective', kind: 'elective', area: 'mms', areaSure: false, d: 3, h: 6,
+  id: 'MEEN 455', title: 'Engineering with Plastics', cr: 3, y: 4, s: 'Elective', kind: 'elective', area: 'mms', areaSure: true, d: 3, h: 6,
   pre: ['MEEN 360'],
   sum: 'Designing parts with plastics: polymer behavior, creep, processing (injection molding, extrusion, thermoforming) and plastic part design rules.',
   why: 'Plastics are in almost every consumer product, medical device and vehicle. Plastic part design is a common entry-level design skill.',
@@ -516,8 +512,8 @@ window.MEEN.courses.push(
   fe: ['Material Properties and Processing'], sw: ['SolidWorks Plastics', 'Moldflow']
 },
 {
-  id: 'MEEN 471', title: 'Elements of Composite Materials', cr: 3, y: 4, s: 'Elective', kind: 'elective', area: 'mms', areaSure: false, d: 4, h: 7,
-  pre: ['MEEN 368', 'MEEN 223'],
+  id: 'MEEN 471', title: 'Elements of Composite Materials', cr: 3, y: 4, s: 'Elective', kind: 'elective', ft: true, area: 'mms', areaSure: true, d: 4, h: 7,
+  pre: ['MEEN 360', 'MEEN 361', 'MEEN 368'],
   sum: 'Fiber-reinforced composites: micromechanics, lamina and laminate analysis (classical lamination theory), failure criteria, and manufacturing.',
   why: 'Composites are central to aerospace, wind energy, automotive lightweighting and sporting goods.',
   know: ['Stress transformation', 'Linear algebra', 'Materials science'],
