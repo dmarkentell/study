@@ -19,6 +19,7 @@ It also has:
 - **How to study**: weekly routine, problem-solving method, exam timeline, campus resources and an FE exam map
 - **FE exam planner**: countdown to your exam date and a week-by-week plan weighted by question counts and your weak areas
 - **Internship timeline**: what to do each semester for internships, MEEN 399 and the full-time search
+- **My plan**: upload a degree evaluation, degree plan or transcript, and each semester's syllabi. Claude reads them (on the claude.ai version) and you review the result. The guide then shows your own roadmap, fills in the planner, marks your courses everywhere, and builds a semester calendar, an exam study plan and a grade calculator. On claude.ai this is saved privately to your account; elsewhere it stays in your browser and can be entered by hand.
 - **Grade distributions**: each course page links to a search for grade distributions by instructor
 - **Student tips**: on the hosted claude.ai version, students can post tips, difficulty and hours for each course; the page shows community averages. The static copy (GitHub Pages) shows a note instead, since it has no shared storage.
 
@@ -46,6 +47,10 @@ All content is in `js/data/`:
 | `tracks.js` | career tracks, FE knowledge areas and the internship timeline |
 
 The plan of study grid is the `PLAN` list near the top of `js/app.js`.
+
+## Third-party code
+
+`vendor/pdf.worker.min.js` is from [PDF.js](https://github.com/mozilla/pdf.js) 3.11.174 (Apache License 2.0); the main PDF.js script loads from cdnjs.
 
 ## Accuracy
 

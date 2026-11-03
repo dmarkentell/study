@@ -120,7 +120,9 @@
     var tags = '<span class="tag">' + KIND[c.kind] + '</span>';
     if (c.area) tags += '<span class="tag">' + AREA[c.area] + (c.areaSure ? '' : '?') + '</span>';
     if (c.ft) tags += '<span class="tag" title="May be stacked with a graduate course for Fast Track">Fast Track</span>';
-    if (isDone(c.id)) tags += '<span class="tag done">Completed</span>';
+    var st = M.courseStatus ? M.courseStatus(c.id) : null;
+    if (st) tags += '<span class="tag ' + (st.kind === 'done' ? 'done' : 'status') + '">' + esc(st.text) + '</span>';
+    else if (isDone(c.id)) tags += '<span class="tag done">Completed</span>';
     return '<a class="card' + (isDone(c.id) ? ' done' : '') + '" href="' + href(c.id) + '">' +
       '<span class="cid">' + esc(c.id) + ' · ' + c.cr + ' cr</span>' +
       '<span class="ctitle">' + esc(c.title) + '</span>' +
@@ -133,6 +135,21 @@
   /* ---------- views ---------- */
   var app = document.getElementById('app');
 
+  function homeMine() {
+    var dg = M.degree && M.degree();
+    var sem = M.semesterCourses ? M.semesterCourses() : [];
+    if (!dg && !sem.length) return '';
+    var now = dg ? dg.inProgress.map(function (c) { return c.id; }) : [];
+    sem.forEach(function (c) { if (now.indexOf(c.id) === -1) now.push(c.id); });
+    var nowCards = now.filter(function (id) { return BY_ID[id]; }).map(function (id) { return card(BY_ID[id]); }).join('');
+    var reqAll = COURSES.filter(function (c) { return c.kind !== 'elective'; });
+    var reqDone = dg ? reqAll.filter(function (c) { return dg.completed.some(function (x) { return x.id === c.id; }); }).length : 0;
+    var nextTerm = dg && dg.planned.length ? dg.planned.slice().sort(function (a, b) { return seasonKey(a.term) - seasonKey(b.term); })[0] : null;
+    return '<section class="sheet stack"><div class="row"><h2>Your semester</h2><a href="#semester">Open My plan</a></div>' +
+      (dg ? '<p>' + reqDone + ' of ' + reqAll.length + ' required courses done' + (nextTerm ? '. Next term (' + esc(nextTerm.term) + '): ' + nextTerm.courses.map(esc).join(', ') : '') + '.</p>' : '') +
+      (nowCards ? '<div class="grid-cards">' + nowCards + '</div>' : '<p class="muted">Add this semester\'s courses in My plan.</p>') +
+      '</section>';
+  }
   function viewHome() {
     var hardest = COURSES.filter(function (c) { return c.kind !== 'elective'; })
       .sort(function (a, b) { return b.d - a.d || b.h - a.h; }).slice(0, 6);
@@ -146,7 +163,9 @@
         '<h1>Every MEEN course, broken down unit by unit.</h1>' +
         '<p>For each course: what it covers, how hard it is, how many hours to plan for, what to know before day one, how to study each unit, and where it shows up in industry. Then pick a career track to see which courses to focus on.</p>' +
       '</section>' +
+      homeMine() +
       '<section class="entry" aria-label="Start here">' +
+        '<a href="#semester"><b>My plan</b><span>Upload your degree plan and syllabi to tailor the whole guide to you.</span></a>' +
         '<a href="#roadmap"><b>Roadmap</b><span>The 4-year plan of study with prerequisite chains.</span></a>' +
         '<a href="#courses"><b>Courses</b><span>' + COURSES.length + ' courses: foundation, MEEN core and technical electives.</span></a>' +
         '<a href="#tracks"><b>Career tracks</b><span>' + M.tracks.length + ' industries, with what to master and which electives to take.</span></a>' +
@@ -169,7 +188,8 @@
     var ui = state.ui;
     var kind = ui.kind || 'all', year = ui.year || 'all', area = ui.area || 'all', sort = ui.sort || 'plan', q = ui.q || '';
     var list = COURSES.filter(function (c) {
-      if (kind !== 'all' && c.kind !== kind) return false;
+      if (kind === 'mine') { if (!(M.courseStatus && M.courseStatus(c.id))) return false; }
+      else if (kind !== 'all' && c.kind !== kind) return false;
       if (year !== 'all' && String(c.y) !== year) return false;
       if (area !== 'all' && c.area !== area) return false;
       if (q) {
@@ -187,7 +207,7 @@
       '<section class="stack"><h1>Courses</h1>' +
         '<p>Search by course number, title or topic (try "Mohr", "Laplace", "pump").</p></section>' +
       '<section class="stack">' +
-        '<div class="row">' + chip('all', 'All') + chip('support', 'Foundation') + chip('core', 'MEEN core') + chip('elective', 'Technical electives') + '</div>' +
+        '<div class="row">' + chip('all', 'All') + chip('support', 'Foundation') + chip('core', 'MEEN core') + chip('elective', 'Technical electives') + (M.degree && M.degree() ? chip('mine', 'My courses') : '') + '</div>' +
         '<div class="row">' +
           '<input type="search" id="q" placeholder="Search courses and topics" value="' + esc(q) + '" aria-label="Search courses and topics">' +
           '<select id="f-year" aria-label="Year"><option value="all">Any year</option>' +
@@ -244,6 +264,7 @@
         (c.ft ? '<span class="tag" title="May be stacked with a graduate course for Fast Track">Fast Track eligible</span>' : '') +
         '<span class="tag">' + KIND[c.kind] + '</span>' +
       '</div>' +
+      '<div id="my-section"></div>' +
       (c.note ? '<p class="notice">' + esc(c.note) + '</p>' : '') +
       '<div class="two-col">' +
         '<section class="sec"><h2>Why it matters</h2><p>' + esc(c.why) + '</p></section>' +
@@ -292,7 +313,29 @@
       (c.kind === 'elective' ? electiveNote() : '');
   }
 
+  function seasonKey(term) {
+    var m = /(spring|summer|fall|winter)\D*(\d{4})|(\d{4})\D*(spring|summer|fall|winter)/i.exec(term || '');
+    if (!m) return 99999;
+    var season = (m[1] || m[4]).toLowerCase(), year = +(m[2] || m[3]);
+    return year * 4 + { winter: 0, spring: 1, summer: 2, fall: 3 }[season];
+  }
+  function myPlanTerms(dg) {
+    var groups = {}, keys = [];
+    dg.completed.forEach(function (c) {
+      var k = c.term || 'Completed (term not listed)';
+      if (!groups[k]) { groups[k] = []; keys.push(k); }
+      groups[k].push(c.id);
+    });
+    keys.sort(function (a, b) { return seasonKey(a) - seasonKey(b); });
+    var terms = keys.map(function (k) { return { label: k, ids: groups[k], kind: 'done' }; });
+    if (dg.inProgress.length) terms.push({ label: 'This semester', ids: dg.inProgress.map(function (c) { return c.id; }), kind: 'now' });
+    dg.planned.slice().sort(function (a, b) { return seasonKey(a.term) - seasonKey(b.term); })
+      .forEach(function (t) { terms.push({ label: t.term, ids: t.courses, kind: 'planned' }); });
+    return terms;
+  }
   function viewRoadmap() {
+    var dg = M.degree && M.degree();
+    var mode = dg ? (state.ui.rm || 'mine') : 'standard';
     var focus = state.ui.focus || '';
     var pre = focus ? ancestors(focus) : {}, next = focus ? descendants(focus) : {};
     var years = [1, 2, 3, 4].map(function (y) {
@@ -312,14 +355,36 @@
         return '<div class="term"><span class="label">' + t.s + ' · ~' + cr + ' cr</span>' + items + '</div>';
       }).join('') + '</div>';
     }).join('');
+    if (mode === 'mine') {
+      years = myPlanTerms(dg).map(function (t) {
+        var cr = 0;
+        var items = t.ids.map(function (id) {
+          var c = BY_ID[id];
+          if (!c) return '<div class="rm slot"><span>' + esc(id) + '</span><span class="mono"></span></div>';
+          cr += c.cr;
+          var cls = 'rm' + (t.kind === 'done' ? ' done' : '') + (id === focus ? ' hl-self' : pre[id] ? ' hl-pre' : next[id] ? ' hl-next' : '');
+          return '<a class="' + cls + '" href="' + href(id) + '"><span class="cid">' + esc(id) + '</span>' + gauge(c.d) + '<span class="ct">' + esc(c.title) + '</span></a>';
+        }).join('');
+        return '<div class="term term-' + t.kind + '"><span class="label">' + esc(t.label) + (cr ? ' · ' + cr + ' cr in guide' : '') + '</span>' + items + '</div>';
+      }).join('');
+      var reqLeft = COURSES.filter(function (c) {
+        return c.kind !== 'elective' && TERM_ORDER[c.id] !== undefined && !(M.courseStatus(c.id));
+      }).sort(order);
+      if (reqLeft.length) years += '<div class="term term-left"><span class="label">Required, not yet in your plan</span>' + reqLeft.map(function (c) {
+        return '<a class="rm" href="' + href(c.id) + '"><span class="cid">' + esc(c.id) + '</span>' + gauge(c.d) + '<span class="ct">' + esc(c.title) + '</span></a>';
+      }).join('') + '</div>';
+    }
     var options = COURSES.filter(function (c) { return c.kind !== 'elective'; }).sort(order)
       .map(function (c) { return '<option value="' + esc(c.id) + '"' + (focus === c.id ? ' selected' : '') + '>' + esc(c.id + ' ' + c.title) + '</option>'; }).join('');
     return '' +
-      '<section class="stack"><h1>Four-year roadmap</h1>' +
-        '<p>The BS-MEEN plan of study from the Texas A&amp;M catalog. Choose a course to highlight what it needs and what it leads to.</p></section>' +
+      '<section class="stack"><h1>' + (mode === 'mine' ? 'Your roadmap' : 'Four-year roadmap') + '</h1>' +
+        '<p>' + (mode === 'mine' ? 'Your courses by term from your degree plan, then required courses not yet placed in a term. ' : 'The BS-MEEN plan of study from the Texas A&amp;M catalog. ') + 'Choose a course to highlight what it needs and what it leads to.</p>' +
+        (dg ? '<div class="row"><button type="button" class="chip" data-set="rm" data-val="mine" aria-pressed="' + (mode === 'mine') + '">My plan</button><button type="button" class="chip" data-set="rm" data-val="standard" aria-pressed="' + (mode === 'standard') + '">Standard 4-year plan</button></div>'
+          : '<p class="muted"><a href="#semester">Add your degree plan</a> to see your own roadmap.</p>') +
+      '</section>' +
       '<div class="row"><label for="focus" class="label">Highlight</label><select id="focus"><option value="">None</option>' + options + '</select></div>' +
       '<div class="legend"><span><i style="background:var(--accent)"></i>Selected</span><span><i style="background:var(--d3)"></i>Needed first</span><span><i style="background:var(--d1)"></i>Leads to</span><span>✓ completed</span></div>' +
-      '<div class="roadmap"><div class="roadmap-grid">' + years + '</div></div>' +
+      '<div class="roadmap"><div class="roadmap-grid' + (mode === 'mine' ? ' mine' : '') + '">' + years + '</div></div>' +
       '<p class="notice">A grade of C or better is required in most courses on this plan. Students take a math placement exam that can change the starting math course. MEEN 399 (high impact experience) is a zero-credit graduation requirement. Always confirm requirements with your degree audit and MEEN advising.</p>';
   }
 
@@ -711,6 +776,7 @@
     else if (h === 'study') html = viewStudy();
     else if (h === 'fe-plan') { html = viewFE(); tab = 'study'; }
     else if (h === 'careers') html = viewCareer();
+    else if (M.views && M.views[h]) html = M.views[h]();
     else { html = viewHome(); tab = 'home'; }
     if (h.indexOf('course-') !== 0) document.title = 'MEEN Field Guide';
     app.innerHTML = html;
@@ -718,6 +784,7 @@
       if (a.getAttribute('href') === '#' + tab) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current');
     });
     if (h.indexOf('course-') === 0) renderTips();
+    if (M.afterRender) M.afterRender(h);
     return tab;
   }
   function rerender(keepFocusId) {
@@ -796,6 +863,19 @@
     if (e.target.classList && e.target.classList.contains('unitcheck')) { e.preventDefault(); var cb = e.target; setTimeout(function () { cb.checked = !cb.checked; cb.dispatchEvent(new Event('change', { bubbles: true })); }, 0); }
   }, true);
 
+  M.app = {
+    esc: esc, href: href, BY_ID: BY_ID, COURSES: COURSES,
+    rerender: function () { rerender(); },
+    // Fill the planner from a saved degree plan. On page load (fromLoad) only
+    // replace example data, so manual planner edits are kept.
+    applyDegree: function (dg, fromLoad) {
+      if (!dg || (fromLoad && !state.example)) { if (fromLoad) rerender(); return; }
+      state.done = dg.completed.map(function (c) { return c.id; }).filter(function (id) { return BY_ID[id]; });
+      state.plan = dg.inProgress.map(function (c) { return c.id; }).filter(function (id) { return BY_ID[id]; });
+      state.example = false; save(); rerender();
+    }
+  };
   route();
 startTips();
+if (M.semesterInit) M.semesterInit();
 })();
