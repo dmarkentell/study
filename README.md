@@ -17,7 +17,6 @@ It also has:
 - **Career tracks**: 11 industries (aerospace, automotive/EV, oil & gas, power, HVAC, robotics, manufacturing, semiconductors, biomedical, simulation, grad school), each with courses to master, recommended electives, skills, software, certifications and example employers
 - **Semester planner**: mark completed courses, pick next semester, see weekly workload, missing prerequisites, and technical-elective area coverage
 - **How to study**: weekly routine, problem-solving method, exam timeline, campus resources and an FE exam map
-- **Flashcards**: formula and concept cards for each course, repeated on a spaced (Leitner) schedule
 - **FE exam planner**: countdown to your exam date and a week-by-week plan weighted by question counts and your weak areas
 - **Internship timeline**: what to do each semester for internships, MEEN 399 and the full-time search
 - **Grade distributions**: each course page links to a search for grade distributions by instructor
@@ -45,7 +44,6 @@ All content is in `js/data/`:
 | `core.js` | required MEEN courses |
 | `electives.js`, `electives2.js` | MEEN technical and general electives, the area rule, and pre-approved non-MEEN electives |
 | `tracks.js` | career tracks, FE knowledge areas and the internship timeline |
-| `flashcards.js` | formula flashcards |
 
 The plan of study grid is the `PLAN` list near the top of `js/app.js`.
 

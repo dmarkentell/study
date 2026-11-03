@@ -254,10 +254,6 @@ th { font-family: var(--f-mono); font-size: 0.72rem; text-transform: uppercase; 
 .steps li { list-style: none; display: grid; grid-template-columns: 2.2em 1fr; gap: 8px; }
 .steps li::before { counter-increment: step; content: counter(step); font-family: var(--f-mono); font-weight: 600; color: var(--accent); border: 1px solid var(--accent); border-radius: 50%; width: 1.8em; height: 1.8em; display: grid; place-items: center; font-size: 0.8rem; }
 
-/* Flashcards */
-.flash { background: var(--sheet); border: 2px solid var(--ink); border-radius: 2px; padding: 24px; display: grid; gap: 14px; max-width: 720px; }
-.flash .front { font-family: var(--f-display); font-size: 1.7rem; font-weight: 600; line-height: 1.2; }
-.flash .back { font-family: var(--f-mono); font-size: 1.05rem; border-top: 1px dashed var(--rule); padding-top: 14px; overflow-wrap: anywhere; }
 input[type="date"], input[type="number"], input[type="text"], textarea {
   font: inherit; color: var(--ink); background: var(--sheet); border: 1px solid var(--rule);
   border-radius: var(--radius); padding: 6px 10px; max-width: 100%;

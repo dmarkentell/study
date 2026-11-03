@@ -45,7 +45,7 @@
       var raw = localStorage.getItem(KEY);
       if (raw) {
         var s = JSON.parse(raw);
-        return { done: s.done || [], units: s.units || {}, plan: s.plan || [], example: !!s.example, ui: s.ui || {}, cards: s.cards || {}, fe: s.fe || {} };
+        return { done: s.done || [], units: s.units || {}, plan: s.plan || [], example: !!s.example, ui: s.ui || {}, fe: s.fe || {} };
       }
     } catch (e) { /* storage unavailable */ }
     return exampleState();
@@ -60,7 +60,7 @@
         if (i < cut) done.push(id); else if (i === cut) plan.push(id);
       });
     });
-    return { done: done, units: {}, plan: plan, example: true, ui: {}, cards: {}, fe: {} };
+    return { done: done, units: {}, plan: plan, example: true, ui: {}, fe: {} };
   }
   function save() {
     try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) { /* ignore */ }
@@ -113,7 +113,6 @@
     return M.tracks.filter(function (t) { return t.master.indexOf(id) !== -1 || t.electives.indexOf(id) !== -1; });
   }
   function gradeUrl(c) { return 'https://www.google.com/search?q=' + encodeURIComponent('Texas A&M grade distribution ' + c.id); }
-  function cardCount(id) { return M.cards.filter(function (cd) { return cd[0] === id; }).length; }
   function missingPre(c) { return c.pre.filter(function (p) { return !isDone(p); }); }
 
   function card(c) {
@@ -153,7 +152,6 @@
         '<a href="#tracks"><b>Career tracks</b><span>' + M.tracks.length + ' industries, with what to master and which electives to take.</span></a>' +
         '<a href="#planner"><b>Semester planner</b><span>Check workload and what you are cleared to take next.</span></a>' +
         '<a href="#study"><b>How to study</b><span>A weekly routine, exam prep plan, and FE exam map.</span></a>' +
-        '<a href="#flashcards"><b>Flashcards</b><span>' + M.cards.length + ' formula cards that repeat on a spaced schedule.</span></a>' +
         '<a href="#fe-plan"><b>FE exam planner</b><span>Countdown and a week-by-week study plan for the FE.</span></a>' +
         '<a href="#careers"><b>Internship timeline</b><span>What to do each semester to land internships and a job.</span></a>' +
       '</section>' +
@@ -285,7 +283,7 @@
         '<section class="sec"><h2>Exams, tools and careers</h2>' +
           '<span class="label">FE Mechanical areas</span>' + (c.fe.length ? '<div class="pills">' + c.fe.map(function (f) { return '<span class="pill">' + esc(f) + '</span>'; }).join('') + '</div>' : '<p class="muted">None.</p>') +
           '<span class="label">Grades and practice</span><p><a href="' + gradeUrl(c) + '" target="_blank" rel="noopener">Grade distributions for ' + esc(c.id) + ' by instructor</a>' +
-            (cardCount(c.id) ? ' · <a href="#flashcards" data-deck="' + esc(c.id) + '">' + plural(cardCount(c.id), 'flashcard') + '</a>' : '') + '</p>' +
+            '</p>' +
           '<span class="label">Software</span>' + (c.sw.length ? '<p>' + c.sw.map(esc).join(', ') + '</p>' : '<p class="muted">None in particular.</p>') +
           '<span class="label">Career tracks that use it</span>' + (tr.length ? '<div class="pills">' + tr.map(function (t) { return '<a class="pill" href="#track-' + t.id + '">' + esc(t.name) + '</a>'; }).join('') + '</div>' : '<p class="muted">All tracks.</p>') +
         '</section>' +
@@ -470,61 +468,7 @@
       '</section>';
   }
 
-  /* ---------- flashcards (Leitner boxes, saved in this browser) ---------- */
-  var BOX_DAYS = [0, 1, 3, 7, 16]; // box 1..5 review interval in days
   var DAY = 86400000;
-  function cardKey(cd) { return cd[0] + '|' + cd[1]; }
-  function cardState(cd) { return state.cards[cardKey(cd)] || { box: 0, due: 0 }; }
-  function deckCards() {
-    var deck = state.ui.deck || 'all';
-    return M.cards.filter(function (cd) { return deck === 'all' || cd[0] === deck; });
-  }
-  function dueCards() {
-    var now = Date.now();
-    return deckCards().filter(function (cd) { return cardState(cd).due <= now; })
-      .sort(function (a, b) { var sa = cardState(a), sb = cardState(b); return sa.box - sb.box || sa.due - sb.due; });
-  }
-  function viewCards() {
-    var deck = state.ui.deck || 'all';
-    var decks = [];
-    M.cards.forEach(function (cd) { if (decks.indexOf(cd[0]) === -1) decks.push(cd[0]); });
-    decks.sort(function (a, b) { return order(BY_ID[a] || { id: a }, BY_ID[b] || { id: b }); });
-    var all = deckCards(), due = dueCards(), cur = due[0];
-    var boxes = [0, 0, 0, 0, 0, 0];
-    all.forEach(function (cd) { boxes[cardState(cd).box]++; });
-    var flipped = !!state.ui.flip;
-    var next = all.map(function (cd) { return cardState(cd).due; }).filter(function (d) { return d > Date.now(); }).sort()[0];
-    return '' +
-      '<section class="stack"><h1>Formula flashcards</h1>' +
-        '<p>Key formulas and concepts from each course. Cards you know come back less often (1, 3, 7, then 16 days); cards you miss come back right away. Progress is saved in this browser.</p></section>' +
-      '<div class="row"><label for="deck" class="label">Deck</label><select id="deck"><option value="all">All courses (' + M.cards.length + ' cards)</option>' +
-        decks.map(function (d) { var n = M.cards.filter(function (cd) { return cd[0] === d; }).length; return '<option value="' + esc(d) + '"' + (deck === d ? ' selected' : '') + '>' + esc(d) + ' (' + n + ')</option>'; }).join('') +
-      '</select></div>' +
-      '<div class="load">' +
-        '<div><span class="label">Due now</span><span class="big">' + due.length + '</span></div>' +
-        '<div><span class="label">New</span><span class="big">' + boxes[0] + '</span></div>' +
-        '<div><span class="label">Learning (box 1-2)</span><span class="big">' + (boxes[1] + boxes[2]) + '</span></div>' +
-        '<div><span class="label">Known (box 3-5)</span><span class="big">' + (boxes[3] + boxes[4] + boxes[5]) + '</span></div>' +
-      '</div>' +
-      (cur ? '<section class="flash" aria-live="polite">' +
-          '<span class="label">' + esc(cur[0]) + (BY_ID[cur[0]] ? ' · ' + esc(BY_ID[cur[0]].title) : '') + '</span>' +
-          '<p class="front">' + esc(cur[1]) + '</p>' +
-          (flipped ? '<p class="back">' + esc(cur[2]) + '</p>' +
-            '<div class="row"><button type="button" class="btn ghost" data-action="card-miss">Missed it</button><button type="button" class="btn" data-action="card-got">Got it</button></div>'
-          : '<div class="row"><button type="button" class="btn" data-action="card-flip">Show answer</button></div>') +
-        '</section>'
-      : '<section class="flash"><p class="front">All caught up in this deck.</p><p class="muted">' + (next ? 'Next card is due ' + new Date(next).toLocaleDateString() + '.' : '') + ' Pick another deck or come back later.</p></section>') +
-      '<div class="row"><button type="button" class="btn ghost" data-action="card-reset">Reset progress for this deck</button></div>';
-  }
-  function gradeCard(got) {
-    var cur = dueCards()[0];
-    if (!cur) return;
-    var st = cardState(cur);
-    var box = got ? Math.min(st.box + 1, 5) : 1;
-    state.cards[cardKey(cur)] = { box: box, due: got ? Date.now() + BOX_DAYS[box - 1] * DAY + (box === 1 ? 60000 : 0) : Date.now() + 30000 };
-    state.ui.flip = false;
-    save();
-  }
 
   /* ---------- FE exam countdown planner ---------- */
   var CONF = { weak: 1.6, ok: 1, strong: 0.5 };
@@ -597,7 +541,7 @@
       '</section>' +
       '<section class="sec"><h2>Tips</h2><ul>' +
         '<li>The FE is computer-based, about 6 hours with 110 questions. You get a searchable PDF of the NCEES FE Reference Handbook, so practice with that same PDF.</li>' +
-        '<li>Use the flashcards for formulas and the course pages to review each area.</li>' +
+        '<li>Use the course pages to review each area: the units, self-check questions and most important topics.</li>' +
         '<li>Register through NCEES and check the current exam specification for exact topic weights.</li>' +
       '</ul></section>';
   }
@@ -765,7 +709,6 @@
     else if (h === 'tracks') html = viewTracks();
     else if (h === 'planner') html = viewPlanner();
     else if (h === 'study') html = viewStudy();
-    else if (h === 'flashcards') html = viewCards();
     else if (h === 'fe-plan') { html = viewFE(); tab = 'study'; }
     else if (h === 'careers') html = viewCareer();
     else { html = viewHome(); tab = 'home'; }
@@ -796,17 +739,7 @@
     if (chip) { state.ui[chip.dataset.set] = chip.dataset.val; save(); rerender(); return; }
     var done = t.closest('[data-done]');
     if (done && done.tagName === 'BUTTON') { toggle(state.done, done.dataset.done); edited(); rerender(); return; }
-    var deckLink = t.closest('[data-deck]');
-    if (deckLink) { state.ui.deck = deckLink.dataset.deck; state.ui.flip = false; save(); return; }
     var act = t.closest('[data-action]');
-    if (act && act.dataset.action.indexOf('card-') === 0) {
-      var a = act.dataset.action;
-      if (a === 'card-flip') state.ui.flip = true;
-      else if (a === 'card-got') gradeCard(true);
-      else if (a === 'card-miss') gradeCard(false);
-      else if (a === 'card-reset') { deckCards().forEach(function (cd) { delete state.cards[cardKey(cd)]; }); state.ui.flip = false; }
-      save(); rerender(); return;
-    }
     if (t.id === 'tip-del') { writeTip(document.getElementById('tips-form').dataset.course, null); return; }
     if (act) {
       if (act.dataset.action === 'example') { var ui = state.ui; state = exampleState(); state.ui = ui; }
@@ -835,7 +768,6 @@
     if (t.id === 'f-area') { state.ui.area = t.value; save(); rerender(); }
     if (t.id === 'f-sort') { state.ui.sort = t.value; save(); rerender(); }
     if (t.id === 'focus') { state.ui.focus = t.value; save(); rerender(); }
-    if (t.id === 'deck') { state.ui.deck = t.value; state.ui.flip = false; save(); rerender(); }
     if (t.id === 'fe-date' && t.value) { state.fe = feDefaults(); state.fe.date = t.value; state.fe.example = false; save(); rerender(); }
     if (t.id === 'fe-hours') { var hv = Math.min(Math.max(parseInt(t.value, 10) || 8, 1), 40); state.fe = feDefaults(); state.fe.hours = hv; save(); rerender(); }
     if (t.dataset.conf) { state.fe = feDefaults(); state.fe.conf[t.dataset.conf] = t.value; save(); rerender(); }
