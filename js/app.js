@@ -25,7 +25,8 @@
   var TERM_ORDER = {};
   PLAN.forEach(function (t, i) { t.items.forEach(function (id) { if (id[0] !== '#') TERM_ORDER[id] = i; }); });
 
-  var AREA = { thermo: 'Thermo-fluids Systems', data: 'Data Science & Experimentation', mms: 'Mechanical & Manufacturing Systems' };
+  var AREA = { thermo: 'Thermo-fluids Systems', data: 'Data Science & Experimentation', mms: 'Mechanical & Manufacturing Systems', general: 'General elective' };
+  var TECH_AREAS = ['thermo', 'data', 'mms'];
   var KIND = { support: 'Foundation', core: 'MEEN core', elective: 'Technical elective' };
   var DWORD = { 1: 'Light', 2: 'Moderate', 3: 'Solid', 4: 'Hard', 5: 'Very hard' };
   var YEAR = { 1: 'First year', 2: 'Second year', 3: 'Third year', 4: 'Fourth year' };
@@ -44,7 +45,7 @@
       var raw = localStorage.getItem(KEY);
       if (raw) {
         var s = JSON.parse(raw);
-        return { done: s.done || [], units: s.units || {}, plan: s.plan || [], example: !!s.example, ui: s.ui || {} };
+        return { done: s.done || [], units: s.units || {}, plan: s.plan || [], example: !!s.example, ui: s.ui || {}, fe: s.fe || {} };
       }
     } catch (e) { /* storage unavailable */ }
     return exampleState();
@@ -59,7 +60,7 @@
         if (i < cut) done.push(id); else if (i === cut) plan.push(id);
       });
     });
-    return { done: done, units: {}, plan: plan, example: true, ui: {} };
+    return { done: done, units: {}, plan: plan, example: true, ui: {}, fe: {} };
   }
   function save() {
     try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) { /* ignore */ }
@@ -111,13 +112,17 @@
   function tracksFor(id) {
     return M.tracks.filter(function (t) { return t.master.indexOf(id) !== -1 || t.electives.indexOf(id) !== -1; });
   }
+  function gradeUrl(c) { return 'https://www.google.com/search?q=' + encodeURIComponent('Texas A&M grade distribution ' + c.id); }
   function missingPre(c) { return c.pre.filter(function (p) { return !isDone(p); }); }
 
   function card(c) {
     var ud = unitsDone(c.id).length, pct = Math.round(100 * ud / c.units.length);
     var tags = '<span class="tag">' + KIND[c.kind] + '</span>';
     if (c.area) tags += '<span class="tag">' + AREA[c.area] + (c.areaSure ? '' : '?') + '</span>';
-    if (isDone(c.id)) tags += '<span class="tag done">Completed</span>';
+    if (c.ft) tags += '<span class="tag" title="May be stacked with a graduate course for Fast Track">Fast Track</span>';
+    var st = M.courseStatus ? M.courseStatus(c.id) : null;
+    if (st) tags += '<span class="tag ' + (st.kind === 'done' ? 'done' : 'status') + '">' + esc(st.text) + '</span>';
+    else if (isDone(c.id)) tags += '<span class="tag done">Completed</span>';
     return '<a class="card' + (isDone(c.id) ? ' done' : '') + '" href="' + href(c.id) + '">' +
       '<span class="cid">' + esc(c.id) + ' · ' + c.cr + ' cr</span>' +
       '<span class="ctitle">' + esc(c.title) + '</span>' +
@@ -130,6 +135,21 @@
   /* ---------- views ---------- */
   var app = document.getElementById('app');
 
+  function homeMine() {
+    var dg = M.degree && M.degree();
+    var sem = M.semesterCourses ? M.semesterCourses() : [];
+    if (!dg && !sem.length) return '';
+    var now = dg ? dg.inProgress.map(function (c) { return c.id; }) : [];
+    sem.forEach(function (c) { if (now.indexOf(c.id) === -1) now.push(c.id); });
+    var nowCards = now.filter(function (id) { return BY_ID[id]; }).map(function (id) { return card(BY_ID[id]); }).join('');
+    var reqAll = COURSES.filter(function (c) { return c.kind !== 'elective'; });
+    var reqDone = dg ? reqAll.filter(function (c) { return dg.completed.some(function (x) { return x.id === c.id; }); }).length : 0;
+    var nextTerm = dg && dg.planned.length ? dg.planned.slice().sort(function (a, b) { return seasonKey(a.term) - seasonKey(b.term); })[0] : null;
+    return '<section class="sheet stack"><div class="row"><h2>Your semester</h2><a href="#semester">Open My plan</a></div>' +
+      (dg ? '<p>' + reqDone + ' of ' + reqAll.length + ' required courses done' + (nextTerm ? '. Next term (' + esc(nextTerm.term) + '): ' + nextTerm.courses.map(esc).join(', ') : '') + '.</p>' : '') +
+      (nowCards ? '<div class="grid-cards">' + nowCards + '</div>' : '<p class="muted">Add this semester\'s courses in My plan.</p>') +
+      '</section>';
+  }
   function viewHome() {
     var hardest = COURSES.filter(function (c) { return c.kind !== 'elective'; })
       .sort(function (a, b) { return b.d - a.d || b.h - a.h; }).slice(0, 6);
@@ -143,12 +163,16 @@
         '<h1>Every MEEN course, broken down unit by unit.</h1>' +
         '<p>For each course: what it covers, how hard it is, how many hours to plan for, what to know before day one, how to study each unit, and where it shows up in industry. Then pick a career track to see which courses to focus on.</p>' +
       '</section>' +
+      homeMine() +
       '<section class="entry" aria-label="Start here">' +
+        '<a href="#semester"><b>My plan</b><span>Upload your degree plan and syllabi to tailor the whole guide to you.</span></a>' +
         '<a href="#roadmap"><b>Roadmap</b><span>The 4-year plan of study with prerequisite chains.</span></a>' +
         '<a href="#courses"><b>Courses</b><span>' + COURSES.length + ' courses: foundation, MEEN core and technical electives.</span></a>' +
         '<a href="#tracks"><b>Career tracks</b><span>' + M.tracks.length + ' industries, with what to master and which electives to take.</span></a>' +
         '<a href="#planner"><b>Semester planner</b><span>Check workload and what you are cleared to take next.</span></a>' +
         '<a href="#study"><b>How to study</b><span>A weekly routine, exam prep plan, and FE exam map.</span></a>' +
+        '<a href="#fe-plan"><b>FE exam planner</b><span>Countdown and a week-by-week study plan for the FE.</span></a>' +
+        '<a href="#careers"><b>Internship timeline</b><span>What to do each semester to land internships and a job.</span></a>' +
       '</section>' +
       '<section class="sec"><h2>Hardest required courses <span class="label">plan your semesters around these</span></h2>' +
         '<div class="grid-cards">' + hardest.map(card).join('') + '</div></section>' +
@@ -164,7 +188,8 @@
     var ui = state.ui;
     var kind = ui.kind || 'all', year = ui.year || 'all', area = ui.area || 'all', sort = ui.sort || 'plan', q = ui.q || '';
     var list = COURSES.filter(function (c) {
-      if (kind !== 'all' && c.kind !== kind) return false;
+      if (kind === 'mine') { if (!(M.courseStatus && M.courseStatus(c.id))) return false; }
+      else if (kind !== 'all' && c.kind !== kind) return false;
       if (year !== 'all' && String(c.y) !== year) return false;
       if (area !== 'all' && c.area !== area) return false;
       if (q) {
@@ -182,7 +207,7 @@
       '<section class="stack"><h1>Courses</h1>' +
         '<p>Search by course number, title or topic (try "Mohr", "Laplace", "pump").</p></section>' +
       '<section class="stack">' +
-        '<div class="row">' + chip('all', 'All') + chip('support', 'Foundation') + chip('core', 'MEEN core') + chip('elective', 'Technical electives') + '</div>' +
+        '<div class="row">' + chip('all', 'All') + chip('support', 'Foundation') + chip('core', 'MEEN core') + chip('elective', 'Technical electives') + (M.degree && M.degree() ? chip('mine', 'My courses') : '') + '</div>' +
         '<div class="row">' +
           '<input type="search" id="q" placeholder="Search courses and topics" value="' + esc(q) + '" aria-label="Search courses and topics">' +
           '<select id="f-year" aria-label="Year"><option value="all">Any year</option>' +
@@ -194,11 +219,18 @@
         '<p class="label">' + plural(list.length, 'course') + '</p>' +
         (list.length ? '<div class="grid-cards">' + list.map(card).join('') + '</div>' : '<p>No courses match. Clear the search or filters.</p>') +
       '</section>' +
-      (kind === 'elective' || area !== 'all' ? electiveNote() : '');
+      (kind === 'elective' || area !== 'all' ? electiveNote() + nonMeenTable() : '');
   }
 
   function electiveNote() {
-    return '<p class="notice">Degree rule: at least three MEEN technical electives, with at least one from each area (Thermo-fluids Systems, Data Science &amp; Experimentation, Mechanical &amp; Manufacturing Systems). The plan of study shows 12 technical-elective hours. A "?" after an area means the assignment is a best guess. Confirm with the current MEEN technical elective list from advising and check Howdy for what is offered each term.</p>';
+    return '<p class="notice">Degree rule: at least three MEEN technical electives, with at least one from each area (Thermo-fluids Systems, Data Science &amp; Experimentation, Mechanical &amp; Manufacturing Systems). The plan of study shows 12 technical-elective hours, and up to 3 of them may be non-MEEN. Areas and prerequisites follow the department\'s current technical elective list. "Fast Track" courses may be stacked with a graduate course. Check Howdy for what is offered each term.</p>';
+  }
+  function nonMeenTable() {
+    return '<section class="sec"><h2>Non-MEEN technical electives <span class="label">no more than 3 hours</span></h2>' +
+      '<p>Pre-approved by the department. Other courses need approval from MEEN advising (they must have a discipline-specific prerequisite, use advanced math and be quantitative).</p>' +
+      '<div class="tablewrap"><table><thead><tr><th>Department</th><th>Courses</th></tr></thead><tbody>' +
+      (M.nonMeen || []).map(function (r) { return '<tr><td>' + esc(r[0]) + '</td><td>' + esc(r[1]) + '</td></tr>'; }).join('') +
+      '</tbody></table></div></section>';
   }
 
   function viewCourse(id) {
@@ -229,8 +261,11 @@
       '<div class="row">' +
         '<button type="button" class="btn' + (isDone(c.id) ? ' ghost' : '') + '" data-done="' + esc(c.id) + '">' + (isDone(c.id) ? 'Mark as not completed' : 'Mark course completed') + '</button>' +
         (c.area ? '<span class="tag">' + AREA[c.area] + (c.areaSure ? '' : ' (area unconfirmed)') + '</span>' : '') +
+        (c.ft ? '<span class="tag" title="May be stacked with a graduate course for Fast Track">Fast Track eligible</span>' : '') +
         '<span class="tag">' + KIND[c.kind] + '</span>' +
       '</div>' +
+      '<div id="my-section"></div>' +
+      (c.note ? '<p class="notice">' + esc(c.note) + '</p>' : '') +
       '<div class="two-col">' +
         '<section class="sec"><h2>Why it matters</h2><p>' + esc(c.why) + '</p></section>' +
         '<section class="sec"><h2>Before you start</h2>' +
@@ -267,15 +302,40 @@
           (chain.length ? '<span class="label">Full prerequisite chain</span><div class="pills">' + chain.map(pre).join('') + '</div>' : '') +
         '</section>' +
         '<section class="sec"><h2>Exams, tools and careers</h2>' +
-          '<span class="label">FE Mechanical areas</span>' + (c.fe.length ? '<div class="pills">' + c.fe.map(function (f) { return '<span class="pill">' + esc(f) + '</span>'; }).join('') + '</div>' : '<p class="muted">None.</p>') +
+          '<span class="label">FE Mechanical areas</span>' + (c.kind === 'elective' ? '<p class="muted">Not needed for the FE. The exam covers material from the required courses.</p>' : c.fe.length ? '<div class="pills">' + c.fe.map(function (f) { return '<span class="pill">' + esc(f) + '</span>'; }).join('') + '</div>' : '<p class="muted">None.</p>') +
+          '<span class="label">Grades and practice</span><p><a href="' + gradeUrl(c) + '" target="_blank" rel="noopener">Grade distributions for ' + esc(c.id) + ' by instructor</a>' +
+            '</p>' +
           '<span class="label">Software</span>' + (c.sw.length ? '<p>' + c.sw.map(esc).join(', ') + '</p>' : '<p class="muted">None in particular.</p>') +
           '<span class="label">Career tracks that use it</span>' + (tr.length ? '<div class="pills">' + tr.map(function (t) { return '<a class="pill" href="#track-' + t.id + '">' + esc(t.name) + '</a>'; }).join('') + '</div>' : '<p class="muted">All tracks.</p>') +
         '</section>' +
       '</div>' +
+      tipsShell(c) +
       (c.kind === 'elective' ? electiveNote() : '');
   }
 
+  function seasonKey(term) {
+    var m = /(spring|summer|fall|winter)\D*(\d{4})|(\d{4})\D*(spring|summer|fall|winter)/i.exec(term || '');
+    if (!m) return 99999;
+    var season = (m[1] || m[4]).toLowerCase(), year = +(m[2] || m[3]);
+    return year * 4 + { winter: 0, spring: 1, summer: 2, fall: 3 }[season];
+  }
+  function myPlanTerms(dg) {
+    var groups = {}, keys = [];
+    dg.completed.forEach(function (c) {
+      var k = c.term || 'Completed (term not listed)';
+      if (!groups[k]) { groups[k] = []; keys.push(k); }
+      groups[k].push(c.id);
+    });
+    keys.sort(function (a, b) { return seasonKey(a) - seasonKey(b); });
+    var terms = keys.map(function (k) { return { label: k, ids: groups[k], kind: 'done' }; });
+    if (dg.inProgress.length) terms.push({ label: 'This semester', ids: dg.inProgress.map(function (c) { return c.id; }), kind: 'now' });
+    dg.planned.slice().sort(function (a, b) { return seasonKey(a.term) - seasonKey(b.term); })
+      .forEach(function (t) { terms.push({ label: t.term, ids: t.courses, kind: 'planned' }); });
+    return terms;
+  }
   function viewRoadmap() {
+    var dg = M.degree && M.degree();
+    var mode = dg ? (state.ui.rm || 'mine') : 'standard';
     var focus = state.ui.focus || '';
     var pre = focus ? ancestors(focus) : {}, next = focus ? descendants(focus) : {};
     var years = [1, 2, 3, 4].map(function (y) {
@@ -295,14 +355,36 @@
         return '<div class="term"><span class="label">' + t.s + ' · ~' + cr + ' cr</span>' + items + '</div>';
       }).join('') + '</div>';
     }).join('');
+    if (mode === 'mine') {
+      years = myPlanTerms(dg).map(function (t) {
+        var cr = 0;
+        var items = t.ids.map(function (id) {
+          var c = BY_ID[id];
+          if (!c) return '<div class="rm slot"><span>' + esc(id) + '</span><span class="mono"></span></div>';
+          cr += c.cr;
+          var cls = 'rm' + (t.kind === 'done' ? ' done' : '') + (id === focus ? ' hl-self' : pre[id] ? ' hl-pre' : next[id] ? ' hl-next' : '');
+          return '<a class="' + cls + '" href="' + href(id) + '"><span class="cid">' + esc(id) + '</span>' + gauge(c.d) + '<span class="ct">' + esc(c.title) + '</span></a>';
+        }).join('');
+        return '<div class="term term-' + t.kind + '"><span class="label">' + esc(t.label) + (cr ? ' · ' + cr + ' cr in guide' : '') + '</span>' + items + '</div>';
+      }).join('');
+      var reqLeft = COURSES.filter(function (c) {
+        return c.kind !== 'elective' && TERM_ORDER[c.id] !== undefined && !(M.courseStatus(c.id));
+      }).sort(order);
+      if (reqLeft.length) years += '<div class="term term-left"><span class="label">Required, not yet in your plan</span>' + reqLeft.map(function (c) {
+        return '<a class="rm" href="' + href(c.id) + '"><span class="cid">' + esc(c.id) + '</span>' + gauge(c.d) + '<span class="ct">' + esc(c.title) + '</span></a>';
+      }).join('') + '</div>';
+    }
     var options = COURSES.filter(function (c) { return c.kind !== 'elective'; }).sort(order)
       .map(function (c) { return '<option value="' + esc(c.id) + '"' + (focus === c.id ? ' selected' : '') + '>' + esc(c.id + ' ' + c.title) + '</option>'; }).join('');
     return '' +
-      '<section class="stack"><h1>Four-year roadmap</h1>' +
-        '<p>The BS-MEEN plan of study from the Texas A&amp;M catalog. Choose a course to highlight what it needs and what it leads to.</p></section>' +
+      '<section class="stack"><h1>' + (mode === 'mine' ? 'Your roadmap' : 'Four-year roadmap') + '</h1>' +
+        '<p>' + (mode === 'mine' ? 'Your courses by term from your degree plan, then required courses not yet placed in a term. ' : 'The BS-MEEN plan of study from the Texas A&amp;M catalog. ') + 'Choose a course to highlight what it needs and what it leads to.</p>' +
+        (dg ? '<div class="row"><button type="button" class="chip" data-set="rm" data-val="mine" aria-pressed="' + (mode === 'mine') + '">My plan</button><button type="button" class="chip" data-set="rm" data-val="standard" aria-pressed="' + (mode === 'standard') + '">Standard 4-year plan</button></div>'
+          : '<p class="muted"><a href="#semester">Add your degree plan</a> to see your own roadmap.</p>') +
+      '</section>' +
       '<div class="row"><label for="focus" class="label">Highlight</label><select id="focus"><option value="">None</option>' + options + '</select></div>' +
       '<div class="legend"><span><i style="background:var(--accent)"></i>Selected</span><span><i style="background:var(--d3)"></i>Needed first</span><span><i style="background:var(--d1)"></i>Leads to</span><span>✓ completed</span></div>' +
-      '<div class="roadmap"><div class="roadmap-grid">' + years + '</div></div>' +
+      '<div class="roadmap"><div class="roadmap-grid' + (mode === 'mine' ? ' mine' : '') + '">' + years + '</div></div>' +
       '<p class="notice">A grade of C or better is required in most courses on this plan. Students take a math placement exam that can change the starting math course. MEEN 399 (high impact experience) is a zero-credit graduation requirement. Always confirm requirements with your degree audit and MEEN advising.</p>';
   }
 
@@ -322,7 +404,7 @@
     }
     var areas = {};
     t.electives.forEach(function (e) { var c = BY_ID[e]; if (c && c.area) areas[c.area] = true; });
-    var missing = Object.keys(AREA).filter(function (a) { return !areas[a]; });
+    var missing = TECH_AREAS.filter(function (a) { return !areas[a]; });
     function ul(a) { return '<ul>' + a.map(function (x) { return '<li>' + esc(x) + '</li>'; }).join('') + '</ul>'; }
     return '<p><a href="#tracks">← All tracks</a></p>' +
       '<section class="stack"><span class="label">Career track</span><h1>' + esc(t.name) + '</h1><p>' + esc(t.blurb) + '</p></section>' +
@@ -389,7 +471,7 @@
         '<p class="muted">Total = credit hours (time in class) + estimated outside hours. Estimates assume you are aiming for a B+ or better.</p>' +
       '</section>' +
       '<section class="sec"><h2>Technical elective areas <span class="label">completed + planned</span></h2>' +
-        '<div class="load">' + Object.keys(AREA).map(function (a) {
+        '<div class="load">' + TECH_AREAS.map(function (a) {
           return '<div><span class="label">' + AREA[a] + '</span><span class="big" style="color:var(' + (have[a] ? '--d1' : '--d5') + ')">' + (have[a] || 0) + '</span></div>';
         }).join('') + '</div><p class="muted">You need at least one MEEN elective in each area and at least three MEEN electives in total.</p></section>' +
       '<section class="sec"><h2>Pick next semester</h2><div class="picklist">' + notDone.map(function (c) { return pick(c, state.plan, 'plan'); }).join('') + '</div></section>' +
@@ -399,9 +481,10 @@
   }
 
   function viewStudy() {
-    var feRows = M.fe.map(function (area) {
-      var cs = COURSES.filter(function (c) { return c.fe.indexOf(area) !== -1; }).sort(order);
-      return '<tr><td>' + esc(area) + '</td><td>' + cs.map(function (c) { return '<a href="' + href(c.id) + '">' + esc(c.id) + '</a>'; }).join(', ') + '</td></tr>';
+    var feRows = M.fe.map(function (row) {
+      var area = row[0];
+      var cs = COURSES.filter(function (c) { return c.kind !== 'elective' && c.fe.indexOf(area) !== -1; }).sort(order);
+      return '<tr><td>' + esc(area) + '</td><td class="mono">' + row[1] + '–' + row[2] + '</td><td>' + cs.map(function (c) { return '<a href="' + href(c.id) + '">' + esc(c.id) + '</a>'; }).join(', ') + '</td></tr>';
     }).join('');
     return '' +
       '<section class="stack"><h1>How to study engineering</h1><p>The same system works for almost every MEEN course. Use it every week, not only before exams.</p></section>' +
@@ -441,17 +524,242 @@
         '<section class="sec"><h2>How to read difficulty and hours</h2><ul>' +
           '<li><b>Difficulty (1-5)</b> is an estimate of how hard students typically find the course, based on content load, math level and pace. It is not official data and varies by instructor.</li>' +
           '<li><b>Hours per week</b> is time outside class for a B+ or better. A common rule is 2-3 hours per credit hour; project-heavy courses (MEEN 357, 402) run higher.</li>' +
-          '<li>Check public grade-distribution reports for the course and instructor before you register.</li>' +
+          '<li>Check grade distributions for the course and instructor before you register. Each course page links to a search for them, and student tips show community ratings.</li>' +
         '</ul></section>' +
       '</div>' +
       '<section class="sec"><h2>FE exam map <span class="label">Fundamentals of Engineering, Mechanical</span></h2>' +
-        '<p>Take the FE in your final year or just after graduating, while the material is fresh. Passing makes you an Engineer in Training (EIT), the first step to a PE license. The exam provides the NCEES FE Reference Handbook; practice finding equations in it.</p>' +
-        '<div class="tablewrap"><table><thead><tr><th>Knowledge area</th><th>Courses that cover it</th></tr></thead><tbody>' + feRows + '</tbody></table></div>' +
+        '<p>Take the FE in your final year or just after graduating, while the material is fresh. Passing makes you an Engineer in Training (EIT), the first step to a PE license. The exam provides the NCEES FE Reference Handbook; practice finding equations in it. The exam only covers material from the required courses below, so you do not need any particular elective for it. Build a study schedule in the <a href="#fe-plan">FE planner</a>.</p>' +
+        '<div class="tablewrap"><table><thead><tr><th>Knowledge area</th><th>Questions (approx.)</th><th>Courses that cover it</th></tr></thead><tbody>' + feRows + '</tbody></table></div>' +
       '</section>';
   }
 
+  var DAY = 86400000;
+
+  /* ---------- FE exam countdown planner ---------- */
+  var CONF = { weak: 1.6, ok: 1, strong: 0.5 };
+  function feDefaults() {
+    var fe = state.fe || {};
+    if (!fe.date) {
+      var d = new Date(Date.now() + 20 * 7 * DAY);
+      fe.date = d.toISOString().slice(0, 10);
+      fe.example = true;
+    }
+    fe.hours = fe.hours || 8;
+    fe.conf = fe.conf || {};
+    return fe;
+  }
+  function viewFE() {
+    var fe = feDefaults();
+    var exam = new Date(fe.date + 'T09:00:00');
+    var days = Math.ceil((exam - Date.now()) / DAY);
+    var weeks = Math.floor(days / 7);
+    var rows = M.fe.map(function (r) {
+      var mid = (r[1] + r[2]) / 2, conf = fe.conf[r[0]] || 'ok';
+      return { area: r[0], lo: r[1], hi: r[2], w: mid * CONF[conf], conf: conf };
+    });
+    var studyWeeks = Math.max(weeks - 2, 0);
+    var totalH = studyWeeks * fe.hours, sumW = rows.reduce(function (s, r) { return s + r.w; }, 0);
+    rows.forEach(function (r) { r.h = sumW ? Math.round(totalH * r.w / sumW) : 0; });
+    // Fill weeks in plan order (follows the order you took the courses).
+    var sched = [], wk = 0, left = fe.hours, cur = [];
+    rows.forEach(function (r) {
+      var need = r.h;
+      while (need > 0 && wk < studyWeeks) {
+        var take = Math.min(need, left);
+        cur.push(r.area + ' (' + take + ' h)');
+        need -= take; left -= take;
+        if (left <= 0) { sched.push(cur); cur = []; wk++; left = fe.hours; }
+      }
+    });
+    if (cur.length && wk < studyWeeks) sched.push(cur);
+    var start = Date.now();
+    function wdate(i) { return new Date(start + i * 7 * DAY).toLocaleDateString(undefined, { month: 'short', day: 'numeric' }); }
+    var schedRows = sched.map(function (items, i) { return '<tr><td class="mono">Week ' + (i + 1) + ' · ' + wdate(i) + '</td><td>' + items.map(esc).join('<br>') + '</td></tr>'; }).join('');
+    if (weeks >= 1) {
+      schedRows += '<tr><td class="mono">Week ' + (studyWeeks + 1) + ' · ' + wdate(studyWeeks) + '</td><td>Full timed practice exam (NCEES practice exam), then review every miss.</td></tr>';
+      schedRows += '<tr><td class="mono">Final week</td><td>Second practice exam, weak-area review, and speed drills finding equations in the FE Reference Handbook. Light review the day before.</td></tr>';
+    }
+    return '' +
+      '<section class="stack"><h1>FE exam planner</h1>' +
+        '<p>Set your exam date and weekly study hours. Mark each area weak, OK or strong; the plan gives more time to areas with more questions and the ones you are weakest in, and saves the last two weeks for full practice exams.</p>' +
+        (fe.example ? '<p class="notice">Showing an example date 20 weeks from today. Set your real exam date below.</p>' : '') +
+      '</section>' +
+      '<div class="row"><label class="label" for="fe-date">Exam date</label><input type="date" id="fe-date" value="' + esc(fe.date) + '">' +
+        '<label class="label" for="fe-hours">Hours per week</label><input type="number" id="fe-hours" min="1" max="40" value="' + fe.hours + '"></div>' +
+      '<div class="load">' +
+        '<div><span class="label">Days left</span><span class="big">' + Math.max(days, 0) + '</span></div>' +
+        '<div><span class="label">Study weeks</span><span class="big">' + studyWeeks + '</span></div>' +
+        '<div><span class="label">Practice-exam weeks</span><span class="big">' + Math.min(Math.max(weeks, 0), 2) + '</span></div>' +
+        '<div><span class="label">Total study hours</span><span class="big">~' + (totalH + Math.min(Math.max(weeks, 0), 2) * fe.hours) + '</span></div>' +
+      '</div>' +
+      (days <= 0 ? '<p class="notice">That date has passed. Pick a future exam date.</p>' : weeks < 4 ? '<p class="notice">Less than a month left. Focus on the highest-weight areas and do at least one full practice exam.</p>' : '') +
+      '<section class="sec"><h2>Areas and time <span class="label">question counts are approximate (110 total)</span></h2>' +
+        '<div class="tablewrap"><table><thead><tr><th>Knowledge area</th><th>Questions</th><th>Your level</th><th>Hours</th><th>Review</th></tr></thead><tbody>' +
+        rows.map(function (r) {
+          var cs = COURSES.filter(function (c) { return c.fe.indexOf(r.area) !== -1 && c.kind !== 'elective'; }).sort(order);
+          return '<tr><td>' + esc(r.area) + '</td><td class="mono">' + r.lo + '–' + r.hi + '</td><td><select data-conf="' + esc(r.area) + '" aria-label="Your level in ' + esc(r.area) + '">' +
+            ['weak', 'ok', 'strong'].map(function (k) { return '<option value="' + k + '"' + (r.conf === k ? ' selected' : '') + '>' + (k === 'ok' ? 'OK' : k[0].toUpperCase() + k.slice(1)) + '</option>'; }).join('') +
+            '</select></td><td class="mono">' + r.h + '</td><td>' + cs.map(function (c) { return '<a href="' + href(c.id) + '">' + esc(c.id) + '</a>'; }).join(', ') + '</td></tr>';
+        }).join('') + '</tbody></table></div></section>' +
+      '<section class="sec"><h2>Week-by-week plan</h2>' +
+        (schedRows ? '<div class="tablewrap"><table><thead><tr><th>Week</th><th>Study</th></tr></thead><tbody>' + schedRows + '</tbody></table></div>' : '<p class="muted">Not enough time for a weekly plan.</p>') +
+      '</section>' +
+      '<section class="sec"><h2>Tips</h2><ul>' +
+        '<li>The FE is computer-based, about 6 hours with 110 questions. You get a searchable PDF of the NCEES FE Reference Handbook, so practice with that same PDF.</li>' +
+        '<li>Use the course pages to review each area: the units, self-check questions and most important topics.</li>' +
+        '<li>Register through NCEES and check the current exam specification for exact topic weights.</li>' +
+      '</ul></section>';
+  }
+
+  /* ---------- internship and career timeline ---------- */
+  function viewCareer() {
+    return '' +
+      '<section class="stack"><h1>Internship timeline</h1>' +
+        '<p>What to do each semester to land internships, meet the MEEN 399 high impact requirement, and graduate with a job or graduate admission. Pair it with a career track.</p></section>' +
+      '<ol class="timeline">' + M.career.map(function (t) {
+        return '<li><div class="tl-head"><span class="label">' + esc(t.term) + '</span><h3>' + esc(t.focus) + '</h3></div><ul>' +
+          t.items.map(function (i) { return '<li>' + esc(i) + '</li>'; }).join('') + '</ul></li>';
+      }).join('') + '</ol>' +
+      '<p class="notice">Career fair dates, deadlines and MEEN 399 rules change. Check the Career Center calendar and MEEN advising.</p>';
+  }
+
+  /* ---------- shared student tips (hosted version only) ---------- */
+  var tips = { db: null, user: null, me: null, canWrite: null, docs: null, status: 'off', names: {} };
+  function tipKey(id) { return slug(id); }
+  function tipsFor(id) {
+    var k = tipKey(id), out = [];
+    (tips.docs || []).forEach(function (d) {
+      var e = d.data && d.data.entries && d.data.entries[k];
+      if (e && typeof e.text === 'string') out.push({ uid: d.id, e: e });
+    });
+    return out.sort(function (a, b) { return (b.e.ts || 0) - (a.e.ts || 0); });
+  }
+  function tipsShell(c) {
+    return '<section class="sec" id="tips"><h2>Student tips <span class="label">shared with everyone who opens this guide</span></h2>' +
+      '<div id="tips-body"></div><div id="tips-form"></div></section>';
+  }
+  function renderTips() {
+    var body = document.getElementById('tips-body');
+    var formEl = document.getElementById('tips-form');
+    if (!body) return;
+    var h = location.hash.slice(1).toLowerCase();
+    var id = h.slice(7).toUpperCase().replace('-', ' ');
+    if (tips.status === 'off') {
+      body.innerHTML = '<p class="muted">Shared tips work in the hosted version of this guide on claude.ai. In this copy, use the units and resources above.</p>';
+      formEl.innerHTML = '';
+      return;
+    }
+    if (tips.status === 'loading') { body.innerHTML = '<p class="muted">Loading tips…</p>'; return; }
+    if (tips.status === 'error') { body.innerHTML = '<p class="muted">Tips could not be loaded right now. Reload the page to try again.</p>'; return; }
+    var list = tipsFor(id);
+    var ds = list.map(function (t) { return +t.e.d; }).filter(function (x) { return x >= 1 && x <= 5; });
+    var hs = list.map(function (t) { return +t.e.h; }).filter(function (x) { return x > 0 && x < 80; });
+    function avg(a) { return a.reduce(function (s, x) { return s + x; }, 0) / a.length; }
+    var summary = list.length ? '<div class="load">' +
+      '<div><span class="label">Tips</span><span class="big">' + list.length + '</span></div>' +
+      (ds.length ? '<div><span class="label">Student difficulty</span><span class="big">' + avg(ds).toFixed(1) + '/5</span></div>' : '') +
+      (hs.length ? '<div><span class="label">Student hours / week</span><span class="big">~' + Math.round(avg(hs)) + '</span></div>' : '') +
+      '</div>' : '<p class="muted">No tips yet for this course. If you have taken it, add the first one.</p>';
+    body.innerHTML = summary + '<div class="tips">' + list.map(function () {
+      return '<article class="tip"><div class="tip-head"><b></b><span class="muted"></span></div><p></p></article>';
+    }).join('') + '</div>';
+    // Fill text with textContent so tip text is never parsed as HTML.
+    var arts = body.querySelectorAll('.tip');
+    list.forEach(function (t, i) {
+      var meta = [t.e.term, t.e.prof ? 'Instructor: ' + t.e.prof : '', t.e.d ? 'Difficulty ' + t.e.d + '/5' : '', t.e.h ? '~' + t.e.h + ' h/wk' : ''].filter(Boolean).join(' · ');
+      arts[i].querySelector('b').textContent = (t.uid === tips.me ? 'You' : (tips.names[t.uid] || 'A student'));
+      arts[i].querySelector('.tip-head span').textContent = meta;
+      arts[i].querySelector('p').textContent = String(t.e.text).slice(0, 1200);
+    });
+    resolveNames(list.map(function (t) { return t.uid; }));
+    if (formEl && formEl.dataset.course !== id) renderTipForm(formEl, id);
+  }
+  function renderTipForm(formEl, id) {
+    formEl.dataset.course = id;
+    if (!tips.me || tips.canWrite === false) {
+      formEl.innerHTML = '<p class="muted">You can read tips. Adding one needs Contributor access to this guide.</p>';
+      return;
+    }
+    var mine = tipsFor(id).filter(function (t) { return t.uid === tips.me; })[0];
+    var e = mine ? mine.e : {};
+    formEl.innerHTML = '<form class="tipform" id="tipform">' +
+      '<span class="label">' + (mine ? 'Edit your tip' : 'Add your tip') + '</span>' +
+      '<textarea id="tip-text" maxlength="1200" rows="4" placeholder="What helped you most? Which units were hardest? What would you do differently?" aria-label="Your tip"></textarea>' +
+      '<div class="row">' +
+        '<label class="label" for="tip-d">Difficulty</label><select id="tip-d"><option value="">–</option>' + [1, 2, 3, 4, 5].map(function (n) { return '<option' + (+e.d === n ? ' selected' : '') + '>' + n + '</option>'; }).join('') + '</select>' +
+        '<label class="label" for="tip-h">Hours/week</label><input type="number" id="tip-h" min="0" max="60">' +
+        '<input type="text" id="tip-term" maxlength="20" placeholder="Term (e.g. Fall 2026)" aria-label="Term taken">' +
+        '<input type="text" id="tip-prof" maxlength="60" placeholder="Instructor (optional)" aria-label="Instructor">' +
+      '</div>' +
+      '<div class="row"><button class="btn" type="submit">' + (mine ? 'Save changes' : 'Post tip') + '</button>' +
+        (mine ? '<button class="btn ghost" type="button" id="tip-del">Delete my tip</button>' : '') +
+        '<span class="muted" id="tip-status" role="status"></span></div>' +
+      '</form>';
+    document.getElementById('tip-text').value = e.text || '';
+    document.getElementById('tip-h').value = e.h || '';
+    document.getElementById('tip-term').value = e.term || '';
+    document.getElementById('tip-prof').value = e.prof || '';
+  }
+  var tipBusy = false;
+  function writeTip(id, entry) {
+    if (tipBusy || !tips.db || !tips.me) return;
+    tipBusy = true;
+    var status = document.getElementById('tip-status');
+    if (status) status.textContent = 'Saving…';
+    var mineDoc = (tips.docs || []).filter(function (d) { return d.id === tips.me; })[0];
+    var entries = {};
+    var old = (mineDoc && mineDoc.data && mineDoc.data.entries) || {};
+    Object.keys(old).forEach(function (k) { entries[k] = old[k]; });
+    if (entry) entries[tipKey(id)] = entry; else delete entries[tipKey(id)];
+    tips.db.doc('tips/' + tips.me).set({ entries: entries }).then(function () {
+      tipBusy = false;
+      var f = document.getElementById('tips-form'); if (f) { f.dataset.course = ''; }
+      renderTips();
+      var s = document.getElementById('tip-status'); if (s) s.textContent = entry ? 'Saved.' : 'Deleted.';
+    }, function (err) {
+      tipBusy = false;
+      if (err && err.code === 'invalid_argument') tips.canWrite = false;
+      var s = document.getElementById('tip-status');
+      if (s) s.textContent = err && err.code === 'quota_exceeded' ? 'The tip store is full.' : 'Could not save. You may not have permission to post here.';
+    });
+  }
+  function resolveNames(ids) {
+    if (!tips.user || !ids.length) return;
+    var need = ids.filter(function (i) { return !(i in tips.names); });
+    if (!need.length) return;
+    need.forEach(function (i) { tips.names[i] = ''; });
+    tips.user.profiles(need).then(function (ps) {
+      need.forEach(function (i) { tips.names[i] = (ps && ps[i] && ps[i].name) || ''; });
+      var arts = document.querySelectorAll('#tips-body .tip b');
+      if (arts.length) renderTips();
+    }, function () {});
+  }
+  function startTips() {
+    if (!window.claude || typeof window.claude.use !== 'function') return;
+    tips.status = 'loading'; renderTips();
+    var timer = setTimeout(function () { if (tips.status === 'loading') { tips.status = 'error'; renderTips(); } }, 10000);
+    Promise.all([window.claude.use('db'), window.claude.use('user')]).then(function (r) {
+      tips.db = r[0]; tips.user = r[1];
+      if (!tips.db) { clearTimeout(timer); tips.status = 'off'; renderTips(); return; }
+      var meP = tips.user ? tips.user.id().catch(function () { return null; }) : Promise.resolve(null);
+      var canP = tips.user ? tips.user.can('data.write').catch(function () { return null; }) : Promise.resolve(null);
+      Promise.all([meP, canP]).then(function (x) {
+        tips.me = x[0]; tips.canWrite = x[1];
+        tips.db.collection('tips').onSnapshot(function (snap) {
+          clearTimeout(timer);
+          tips.docs = snap.docs.map(function (d) { return { id: d.id, data: d.data() }; });
+          tips.status = 'ready';
+          var f = document.getElementById('tips-form');
+          var typing = f && document.activeElement && f.contains(document.activeElement);
+          if (!typing && f) f.dataset.course = '';
+          renderTips();
+        }, function () { clearTimeout(timer); tips.status = 'error'; renderTips(); });
+      });
+    }, function () { clearTimeout(timer); tips.status = 'off'; renderTips(); });
+  }
+
   /* ---------- router ---------- */
-  var NAV = ['home', 'roadmap', 'courses', 'tracks', 'planner', 'study'];
+  
   function route() {
     var h = (location.hash || '#home').slice(1).toLowerCase();
     var html, tab = h;
@@ -466,12 +774,17 @@
     else if (h === 'tracks') html = viewTracks();
     else if (h === 'planner') html = viewPlanner();
     else if (h === 'study') html = viewStudy();
+    else if (h === 'fe-plan') { html = viewFE(); tab = 'study'; }
+    else if (h === 'careers') html = viewCareer();
+    else if (M.views && M.views[h]) html = M.views[h]();
     else { html = viewHome(); tab = 'home'; }
     if (h.indexOf('course-') !== 0) document.title = 'MEEN Field Guide';
     app.innerHTML = html;
     document.querySelectorAll('nav.tabs a').forEach(function (a) {
       if (a.getAttribute('href') === '#' + tab) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current');
     });
+    if (h.indexOf('course-') === 0) renderTips();
+    if (M.afterRender) M.afterRender(h);
     return tab;
   }
   function rerender(keepFocusId) {
@@ -494,6 +807,7 @@
     var done = t.closest('[data-done]');
     if (done && done.tagName === 'BUTTON') { toggle(state.done, done.dataset.done); edited(); rerender(); return; }
     var act = t.closest('[data-action]');
+    if (t.id === 'tip-del') { writeTip(document.getElementById('tips-form').dataset.course, null); return; }
     if (act) {
       if (act.dataset.action === 'example') { var ui = state.ui; state = exampleState(); state.ui = ui; }
       else { state.done = []; state.plan = []; state.units = {}; state.example = false; }
@@ -521,6 +835,25 @@
     if (t.id === 'f-area') { state.ui.area = t.value; save(); rerender(); }
     if (t.id === 'f-sort') { state.ui.sort = t.value; save(); rerender(); }
     if (t.id === 'focus') { state.ui.focus = t.value; save(); rerender(); }
+    if (t.id === 'fe-date' && t.value) { state.fe = feDefaults(); state.fe.date = t.value; state.fe.example = false; save(); rerender(); }
+    if (t.id === 'fe-hours') { var hv = Math.min(Math.max(parseInt(t.value, 10) || 8, 1), 40); state.fe = feDefaults(); state.fe.hours = hv; save(); rerender(); }
+    if (t.dataset.conf) { state.fe = feDefaults(); state.fe.conf[t.dataset.conf] = t.value; save(); rerender(); }
+  });
+  app.addEventListener('submit', function (e) {
+    if (e.target.id !== 'tipform') return;
+    e.preventDefault();
+    var text = document.getElementById('tip-text').value.trim();
+    var st = document.getElementById('tip-status');
+    if (!text) { st.textContent = 'Write a tip before posting.'; return; }
+    var d = parseInt(document.getElementById('tip-d').value, 10), hh = parseInt(document.getElementById('tip-h').value, 10);
+    writeTip(document.getElementById('tips-form').dataset.course, {
+      text: text.slice(0, 1200),
+      d: d >= 1 && d <= 5 ? d : null,
+      h: hh > 0 && hh <= 60 ? hh : null,
+      term: document.getElementById('tip-term').value.trim().slice(0, 20),
+      prof: document.getElementById('tip-prof').value.trim().slice(0, 60),
+      ts: Date.now()
+    });
   });
   app.addEventListener('input', function (e) {
     if (e.target.id === 'q') { state.ui.q = e.target.value; save(); rerender('q'); }
@@ -530,5 +863,19 @@
     if (e.target.classList && e.target.classList.contains('unitcheck')) { e.preventDefault(); var cb = e.target; setTimeout(function () { cb.checked = !cb.checked; cb.dispatchEvent(new Event('change', { bubbles: true })); }, 0); }
   }, true);
 
+  M.app = {
+    esc: esc, href: href, BY_ID: BY_ID, COURSES: COURSES,
+    rerender: function () { rerender(); },
+    // Fill the planner from a saved degree plan. On page load (fromLoad) only
+    // replace example data, so manual planner edits are kept.
+    applyDegree: function (dg, fromLoad) {
+      if (!dg || (fromLoad && !state.example)) { if (fromLoad) rerender(); return; }
+      state.done = dg.completed.map(function (c) { return c.id; }).filter(function (id) { return BY_ID[id]; });
+      state.plan = dg.inProgress.map(function (c) { return c.id; }).filter(function (id) { return BY_ID[id]; });
+      state.example = false; save(); rerender();
+    }
+  };
   route();
+startTips();
+if (M.semesterInit) M.semesterInit();
 })();

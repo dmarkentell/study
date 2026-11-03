@@ -7,15 +7,16 @@
  * The plan of study shows 12 technical-elective hours; up to 3 may be non-MEEN
  * with advisor approval.
  *
- * Titles come from the catalog and department lists where found. Area
- * assignments marked areaSure: false are best guesses: check the current
- * MEEN technical elective list from advising before planning around them.
+ * Titles, areas and prerequisites follow the department's current technical
+ * elective list (engineering.tamu.edu MEEN curriculum page). A `note` field
+ * flags courses not on that list or with extra prerequisite details.
+ * Unit outlines are typical content for each course; syllabi vary.
  * Elective offerings change every semester; check Howdy.
  */
 window.MEEN.courses.push(
 {
-  id: 'MEEN 410', title: 'Internal Combustion Engines', cr: 3, y: 4, s: 'Elective', kind: 'elective', area: 'thermo', areaSure: true, d: 3, h: 7,
-  pre: ['MEEN 315', 'MEEN 344'],
+  id: 'MEEN 410', title: 'Internal Combustion Engines', cr: 3, y: 4, s: 'Elective', kind: 'elective', ft: true, area: 'thermo', areaSure: true, d: 3, h: 7,
+  pre: ['MEEN 344'],
   sum: 'Spark- and compression-ignition engine cycles, combustion, fuel-air mixing, emissions, performance testing and engine design.',
   why: 'Direct path to automotive, motorsport, heavy equipment, marine and power generation (gas engines).',
   know: ['Otto and Diesel cycles', 'First law for control volumes', 'Combustion stoichiometry'],
@@ -30,10 +31,11 @@ window.MEEN.courses.push(
   real: ['Automotive and heavy-duty powertrains', 'Natural gas compression and generator sets', 'Motorsport (Formula SAE)'],
   pit: ['Weak thermo fundamentals'],
   res: [['book', 'Heywood – Internal Combustion Engine Fundamentals', 'Heywood Internal Combustion Engine Fundamentals'], ['video', 'Engineering Explained', 'Engineering Explained engine']],
-  fe: ['Thermodynamics'], sw: ['GT-Power (industry)', 'EES']
+  fe: [], sw: ['GT-Power (industry)', 'EES']
 },
 {
-  id: 'MEEN 414', title: 'Principles of Turbomachinery', cr: 3, y: 4, s: 'Elective', kind: 'elective', area: 'thermo', areaSure: true, d: 4, h: 8,
+  id: 'MEEN 414', title: 'Principles of Turbomachinery', cr: 3, y: 4, s: 'Elective', kind: 'elective', area: null, areaSure: true, d: 4, h: 8,
+  note: 'Not on the current department technical elective list. It may not be offered or may not count toward the elective areas; check with MEEN advising before planning on it.',
   pre: ['MEEN 315', 'MEEN 344'],
   sum: 'Pumps, fans, compressors and turbines: velocity triangles, Euler turbomachinery equation, similarity laws, performance curves and an intro to blade design.',
   why: 'Texas has a lot of rotating-equipment work (oil and gas, power, aerospace), and Texas A&M has a long-running turbomachinery research lab and industry symposium.',
@@ -49,11 +51,11 @@ window.MEEN.courses.push(
   real: ['Pipeline compressors and pumps', 'Gas turbines for power and aircraft', 'HVAC fans'],
   pit: ['Sign errors in velocity triangles', 'Unit confusion with head vs pressure'],
   res: [['book', 'Dixon & Hall – Fluid Mechanics and Thermodynamics of Turbomachinery', 'Dixon Hall Fluid Mechanics Thermodynamics of Turbomachinery'], ['tool', 'Texas A&M Turbomachinery & Pump Symposia', 'Texas A&M Turbomachinery Pump Symposia']],
-  fe: ['Fluid Mechanics', 'Thermodynamics'], sw: ['EES', 'Python']
+  fe: [], sw: ['EES', 'Python']
 },
 {
-  id: 'MEEN 421', title: 'Thermo-Fluids Analysis and Design', cr: 3, y: 4, s: 'Elective', kind: 'elective', area: 'thermo', areaSure: true, d: 4, h: 8,
-  pre: ['MEEN 315', 'MEEN 344'],
+  id: 'MEEN 421', title: 'Thermal-Fluids Analysis and Design', cr: 3, y: 4, s: 'Elective', kind: 'elective', area: 'thermo', areaSure: true, d: 4, h: 8,
+  pre: ['MEEN 461'],
   sum: 'Design of thermal-fluid systems: piping networks, pumps, heat exchangers, power and refrigeration systems, and system-level optimization.',
   why: 'Turns thermo, fluids and heat transfer into system design, which is what plant, HVAC and energy engineers do daily. It is also a prerequisite for MEEN 463.',
   know: ['Thermodynamics cycles', 'Pipe flow', 'Heat exchangers (helpful)'],
@@ -68,11 +70,11 @@ window.MEEN.courses.push(
   real: ['Power plants', 'Refineries and chemical plants', 'HVAC central plants', 'Data-center cooling'],
   pit: ['Weak fundamentals from 315/344'],
   res: [['book', 'Stoecker – Design of Thermal Systems', 'Stoecker Design of Thermal Systems'], ['tool', 'EES (Engineering Equation Solver)', 'EES Engineering Equation Solver']],
-  fe: ['Thermodynamics', 'Fluid Mechanics', 'Heat Transfer'], sw: ['EES', 'Python']
+  fe: [], sw: ['EES', 'Python']
 },
 {
   id: 'MEEN 437', title: 'Principles of Building Energy Analysis', cr: 3, y: 4, s: 'Elective', kind: 'elective', area: 'thermo', areaSure: true, d: 3, h: 6,
-  pre: ['MEEN 315', 'MEEN 461'],
+  pre: ['MEEN 315'],
   sum: 'Building heating and cooling loads, psychrometrics, HVAC systems, energy simulation and efficiency measures.',
   why: 'HVAC and building energy is one of the most stable ME job markets and a common path to a PE license.',
   know: ['Psychrometrics basics', 'Heat transfer (conduction, convection)', 'Refrigeration cycles'],
@@ -87,10 +89,10 @@ window.MEEN.courses.push(
   real: ['MEP consulting firms', 'Energy auditing', 'Data center design'],
   pit: ['Misreading the psychrometric chart'],
   res: [['book', 'McQuiston – Heating, Ventilating and Air Conditioning', 'McQuiston Heating Ventilating Air Conditioning'], ['tool', 'EnergyPlus / OpenStudio', 'EnergyPlus OpenStudio tutorial'], ['tool', 'ASHRAE student resources', 'ASHRAE student membership']],
-  fe: ['Thermodynamics', 'Heat Transfer'], sw: ['EnergyPlus', 'Trane TRACE / Carrier HAP']
+  fe: [], sw: ['EnergyPlus', 'Trane TRACE / Carrier HAP']
 },
 {
-  id: 'MEEN 463', title: 'Cogeneration Systems', cr: 3, y: 4, s: 'Elective', kind: 'elective', area: 'thermo', areaSure: true, d: 3, h: 6,
+  id: 'MEEN 463', title: 'Cogeneration Systems', cr: 3, y: 4, s: 'Elective', kind: 'elective', ft: true, area: 'thermo', areaSure: true, d: 3, h: 6,
   pre: ['MEEN 421'],
   sum: 'Combined heat and power: gas turbines, engines, heat recovery steam generators, absorption chillers, and economic analysis of cogeneration plants.',
   why: 'Useful for power, petrochemical and campus-energy careers. Texas A&M runs its own campus combined heat and power plant.',
@@ -106,10 +108,10 @@ window.MEEN.courses.push(
   real: ['Industrial plants', 'Campus and hospital energy plants', 'Refineries'],
   pit: [],
   res: [['book', 'Horlock – Cogeneration: Combined Heat and Power', 'Horlock Cogeneration Combined Heat and Power'], ['tool', 'US DOE CHP resources', 'DOE combined heat and power technical assistance']],
-  fe: ['Thermodynamics'], sw: ['EES', 'Excel']
+  fe: [], sw: ['EES', 'Excel']
 },
 {
-  id: 'MEEN 472', title: 'Gas Dynamics', cr: 3, y: 4, s: 'Elective', kind: 'elective', area: 'thermo', areaSure: true, d: 4, h: 8,
+  id: 'MEEN 472', title: 'Gas Dynamics', cr: 3, y: 4, s: 'Elective', kind: 'elective', ft: true, area: 'thermo', areaSure: true, d: 4, h: 8,
   pre: ['MEEN 344'],
   sum: 'Compressible flow: isentropic flow, nozzles, normal and oblique shocks, expansion waves, and flow with friction and heat addition (Fanno and Rayleigh).',
   why: 'Required knowledge for rockets, jet engines, high-pressure gas systems, relief valves and supersonic aircraft.',
@@ -125,11 +127,127 @@ window.MEEN.courses.push(
   real: ['Rocket engines', 'Jet engines', 'Gas pipelines and relief valves'],
   pit: ['Applying incompressible intuition'],
   res: [['book', 'Anderson – Modern Compressible Flow', 'Anderson Modern Compressible Flow'], ['tool', 'NASA Glenn Beginner\'s Guide to Aeronautics', 'NASA Glenn beginner\'s guide to aeronautics compressible']],
-  fe: ['Fluid Mechanics'], sw: ['Python', 'EES']
+  fe: [], sw: ['Python', 'EES']
 },
 {
-  id: 'MEEN 423', title: 'Machine Learning for Mechanical Engineers', cr: 3, y: 4, s: 'Elective', kind: 'elective', area: 'data', areaSure: false, d: 4, h: 8,
-  pre: ['MEEN 357', 'STAT 211'],
+  id: 'MEEN 404', title: 'Experimental Design and Data Analysis', cr: 3, y: 4, s: 'Elective', kind: 'elective', area: 'data', areaSure: true, d: 3, h: 8,
+  pre: ['MEEN 345', 'MEEN 361'],
+  sum: 'Planning and running engineering experiments and analyzing the data: design of experiments, statistical inference, regression, uncertainty, and data analysis in Python, with hands-on lab projects.',
+  why: 'Test, validation, quality and R&D engineers spend much of their time designing experiments and defending results with statistics. It is also the clearest way to satisfy the Data Science & Experimentation area.',
+  know: ['Statistics from STAT 211', 'Uncertainty analysis from MEEN 260', 'Python data processing', 'Lab experience from the junior labs'],
+  units: [
+    ['Planning experiments', 'objectives and hypotheses; variables and controls; test matrices; randomization and blocking; replication', 'Write the test plan, including how you will analyze the data, before touching hardware.', 'Why randomize run order? | What is blocking for?'],
+    ['Factorial designs', 'full and fractional factorial designs; main effects and interactions; response surfaces', 'Run a 2³ design by hand once, then in Python, and interpret every effect.', 'How many runs in a 2⁴ full factorial? | What does an interaction mean physically?'],
+    ['Statistical analysis', 'hypothesis tests; ANOVA; confidence intervals; regression and residual checks', 'For each result, state the effect size and the confidence, not just "significant".', 'What does ANOVA test? | What do patterned residuals tell you?'],
+    ['Uncertainty and data quality', 'measurement uncertainty; outliers; repeatability; reporting results', 'Carry uncertainty all the way into your final plots.', 'When can you remove an outlier? | How do you report a result with uncertainty?'],
+    ['Data analysis projects', 'processing large data sets; visualization; technical reports', 'Build a reusable Python pipeline: load, clean, analyze, plot.', 'How do you make an analysis reproducible? | What makes a figure readable?']
+  ],
+  top: ['Design of experiments', 'ANOVA and regression', 'Uncertainty reporting'],
+  take: ['A good experimental design gets more information from fewer tests.', 'Results need effect sizes and uncertainty to be useful for decisions.'],
+  real: ['Test and validation engineering', 'Process optimization in manufacturing', 'Quality and Six Sigma', 'R&D'],
+  pit: ['Changing one factor at a time and missing interactions', 'Analyzing data without a plan made in advance'],
+  res: [['book', 'Montgomery – Design and Analysis of Experiments', 'Montgomery Design and Analysis of Experiments'], ['book', 'Figliola & Beasley – Mechanical Measurements', 'Figliola Beasley mechanical measurements'], ['video', 'StatQuest with Josh Starmer', 'StatQuest ANOVA']],
+  fe: [], sw: ['Python (pandas, statsmodels)', 'Minitab or JMP']
+},
+{
+  id: 'MEEN 435', title: 'Compressed Air Systems', cr: 3, y: 4, s: 'Elective', kind: 'elective', area: 'thermo', areaSure: true, d: 3, h: 6,
+  pre: ['MEEN 315'],
+  sum: 'Design and energy efficiency of industrial compressed air systems: compressors, treatment (drying and filtration), distribution piping, leaks, controls, and system audits.',
+  why: 'Compressed air is one of the most expensive utilities in manufacturing plants, so engineers who can audit and improve it save companies real money.',
+  know: ['Thermodynamics of compression', 'Pipe flow and pressure drop', 'Engineering economics'],
+  units: [
+    ['Compression', 'reciprocating, rotary screw and centrifugal compressors; compression work; intercooling; performance curves', 'Compute the specific power (kW per 100 cfm) for real compressor data sheets.', 'Why intercool? | Screw vs centrifugal: when to use each?'],
+    ['Air treatment', 'moisture and dew point; dryers; filters; condensate', 'Use psychrometrics to find how much water a compressor makes per day.', 'What is pressure dew point? | Refrigerated vs desiccant dryer?'],
+    ['Distribution and storage', 'piping design; pressure drop; receivers; demand', 'Size a header for a small plant and check pressure drop.', 'Why add storage? | Effect of undersized piping?'],
+    ['Audits and efficiency', 'leak detection; controls and sequencing; heat recovery; cost of air', 'Estimate the yearly cost of a single 1/8-inch leak.', 'What fraction of air is typically lost to leaks? | How does pressure setpoint affect energy?']
+  ],
+  top: ['Compression work', 'Pressure drop', 'Energy audits'],
+  take: ['Every psi and every leak costs energy; system-level fixes often pay back in months.'],
+  real: ['Manufacturing plant utilities', 'Energy consulting', 'Industrial equipment sales engineering'],
+  pit: [],
+  res: [['tool', 'Compressed Air Challenge resources', 'Compressed Air Challenge best practices'], ['tool', 'US DOE compressed air sourcebook', 'DOE improving compressed air system performance sourcebook']],
+  fe: [], sw: ['Excel', 'EES']
+},
+{
+  id: 'MEEN 411', title: 'Mechanical Controls', cr: 3, y: 4, s: 'Elective', kind: 'elective', area: 'mms', areaSure: true, d: 4, h: 8,
+  pre: ['MEEN 364'],
+  sum: 'Applied control of mechanical systems: actuators, hydraulic and pneumatic systems, motion control, and controller implementation.',
+  why: 'A practical follow-on to MEEN 364 for automation, heavy equipment and motion-control roles.',
+  know: ['Transfer functions and PID from MEEN 364', 'System modeling'],
+  units: [
+    ['Actuators', 'electric motors; hydraulic and pneumatic actuators; valves', 'Model one actuator in each energy domain.', 'Why use hydraulics for heavy loads? | What limits pneumatic precision?'],
+    ['Motion control', 'position and velocity loops; trajectory generation; feedforward', 'Simulate a cascaded position-velocity loop.', 'Why add feedforward? | Why cascade loops?'],
+    ['Nonlinear effects', 'saturation; backlash; friction; anti-windup', 'Add saturation to a simulation and watch integrator windup happen.', 'What is integrator windup? | How does backlash affect stability?'],
+    ['Implementation', 'digital control; sampling; PLCs and microcontrollers', 'Discretize a PID and run it on hardware or in code.', 'Effect of sample rate on a controller? | What does a PLC do?']
+  ],
+  top: ['Actuator models', 'Cascaded control', 'Anti-windup'],
+  take: ['Real controllers must handle saturation, friction and sampling.'],
+  real: ['Factory automation', 'Heavy equipment', 'Motion control'],
+  pit: [],
+  res: [['video', 'Brian Douglas – Control', 'Brian Douglas control systems'], ['book', 'Franklin & Powell – Feedback Control of Dynamic Systems', 'Franklin Powell Feedback Control of Dynamic Systems']],
+  fe: [], sw: ['MATLAB/Simulink', 'PLC software']
+},
+{
+  id: 'MEEN 467', title: 'Mechanical Behavior of Materials', cr: 3, y: 4, s: 'Elective', kind: 'elective', ft: true, area: 'mms', areaSure: true, d: 4, h: 7,
+  pre: ['MEEN 360', 'MEEN 361'],
+  sum: 'How and why materials deform and fail: plasticity, fracture mechanics, fatigue crack growth, creep, and design against failure.',
+  why: 'The base for failure analysis, damage tolerance in aerospace, and pressure equipment integrity in oil and gas.',
+  know: ['Stress transformation and failure theories', 'Dislocations and microstructure', 'Fatigue basics'],
+  units: [
+    ['Plasticity', 'yield criteria; strain hardening; true stress and strain', 'Convert engineering to true stress-strain for real data.', 'Why use true stress? | What is strain hardening?'],
+    ['Fracture mechanics', 'stress intensity factor; fracture toughness; LEFM; crack-tip plasticity', 'Use K = Yσ√(πa) to find a critical crack size.', 'Critical crack length for given K_IC? | Why are thick plates more brittle?'],
+    ['Fatigue', 'stress-life and strain-life; Paris law crack growth; damage tolerance', 'Integrate the Paris law to estimate inspection intervals.', 'What does the Paris law predict? | Safe-life vs damage tolerance?'],
+    ['Creep and high temperature', 'creep mechanisms; Larson-Miller parameter; stress rupture', 'Use Larson-Miller to compare service conditions.', 'When does creep matter? | What is Larson-Miller?']
+  ],
+  top: ['Stress intensity factor', 'Paris law', 'Creep'],
+  take: ['Cracks control failure; design with fracture mechanics, not just strength.'],
+  real: ['Aerospace damage tolerance', 'Pipeline and pressure vessel integrity', 'Failure analysis'],
+  pit: [],
+  res: [['book', 'Dowling – Mechanical Behavior of Materials', 'Dowling Mechanical Behavior of Materials'], ['book', 'Anderson – Fracture Mechanics', 'Anderson Fracture Mechanics Fundamentals and Applications']],
+  fe: [], sw: []
+},
+{
+  id: 'MEEN 476', title: 'Nanoscale Issues in Manufacturing', cr: 3, y: 4, s: 'Elective', kind: 'elective', area: null, areaSure: true, d: 3, h: 6,
+  note: 'Not on the current department technical elective list (it appeared on the 2019-20 list). Check with MEEN advising before planning on it.',
+  pre: ['MEEN 360'],
+  sum: 'Manufacturing at small scales: micro- and nanofabrication, thin films, surface forces, metrology, and how scale changes mechanics and heat transfer.',
+  why: 'Relevant to semiconductors, MEMS sensors and advanced materials, which are growing fast in Texas.',
+  know: ['Manufacturing processes', 'Materials science', 'Basic heat transfer'],
+  units: [
+    ['Scaling', 'surface-to-volume effects; adhesion and surface forces; size effects in properties', 'Compute how forces scale as size shrinks by 1000x.', 'Why does adhesion dominate at small scale? | Why are nanowires stronger?'],
+    ['Micro- and nanofabrication', 'lithography; deposition; etching; self-assembly', 'Draw a process flow for a simple MEMS cantilever.', 'Additive vs subtractive steps in fabrication? | Wet vs dry etching?'],
+    ['Metrology', 'SEM; AFM; optical methods; measurement limits', 'Match each instrument to what it can resolve.', 'What does an AFM measure? | Resolution limit of optical microscopy?'],
+    ['Applications', 'MEMS; semiconductor manufacturing; nanocomposites', 'Pick one device and explain how it is made.', 'How is an accelerometer chip made? | What limits yield in a fab?']
+  ],
+  top: ['Scaling laws', 'Fabrication process flows', 'Metrology'],
+  take: ['At small scales, surface effects dominate and normal intuition breaks down.'],
+  real: ['Semiconductor fabs', 'MEMS sensors', 'Advanced materials'],
+  pit: [],
+  res: [['book', 'Madou – Fundamentals of Microfabrication', 'Madou Fundamentals of Microfabrication']],
+  fe: [], sw: []
+},
+{
+  id: 'MEEN 496', title: 'Laser Material Processing for Manufacturing', cr: 3, y: 4, s: 'Elective', kind: 'elective', ft: true, area: 'thermo', areaSure: true, d: 3, h: 6,
+  pre: ['MEEN 315'],
+  sum: 'Using lasers to cut, weld, harden, and additively manufacture metals: laser physics basics, laser-material interaction, heat transfer, and process selection.',
+  why: 'Laser welding, cutting and metal 3D printing are core processes in aerospace, automotive, EV battery and medical device manufacturing.',
+  know: ['Heat transfer (conduction)', 'Manufacturing processes', 'Phase transformations in metals'],
+  units: [
+    ['Laser basics', 'how lasers work; beam quality; focusing; laser types (fiber, CO₂, diode)', 'Relate spot size and power to intensity.', 'Why do fiber lasers dominate metal cutting? | What is beam quality M²?'],
+    ['Laser-material interaction', 'absorption; heating; melting; vaporization; keyhole formation', 'Estimate the time to melt a spot with a simple heat-transfer model.', 'Why is copper hard to laser weld? | What is a keyhole?'],
+    ['Processes', 'cutting; welding; surface hardening; cladding; marking', 'Compare process windows (power vs speed) for each process.', 'Conduction vs keyhole welding? | Why harden with a laser?'],
+    ['Additive manufacturing', 'powder bed fusion; directed energy deposition; defects; residual stress', 'Link defects (porosity, cracking) to process parameters.', 'What causes lack-of-fusion porosity? | Why do AM parts warp?']
+  ],
+  top: ['Absorption and heating', 'Process windows', 'Metal AM'],
+  take: ['Laser processes are controlled heat-transfer problems; parameters set quality.'],
+  real: ['EV battery welding', 'Aerospace metal AM', 'Medical devices'],
+  pit: [],
+  res: [['book', 'Steen – Laser Material Processing', 'Steen Laser Material Processing']],
+  fe: [], sw: []
+},
+{
+  id: 'MEEN 423', title: 'Machine Learning for Mechanical Engineers', cr: 3, y: 4, s: 'Elective', kind: 'elective', area: 'data', areaSure: true, d: 4, h: 8,
+  pre: ['MEEN 357'],
   sum: 'Supervised and unsupervised learning applied to mechanical engineering data: regression, classification, neural networks, and model validation, using Python.',
   why: 'Data and ML skills are in demand in every ME industry (predictive maintenance, surrogate models, manufacturing quality).',
   know: ['Python with NumPy', 'Linear algebra', 'Statistics', 'Least squares'],
@@ -144,11 +262,11 @@ window.MEEN.courses.push(
   real: ['Predictive maintenance', 'Design optimization', 'Manufacturing quality control', 'Autonomous systems'],
   pit: ['Data leakage', 'Skipping validation'],
   res: [['book', 'Géron – Hands-On Machine Learning', 'Geron Hands-On Machine Learning'], ['video', 'Steve Brunton – Machine learning for engineers', 'Steve Brunton machine learning'], ['course', 'Andrew Ng – Machine Learning Specialization', 'Andrew Ng machine learning specialization']],
-  fe: ['Computational Tools', 'Probability and Statistics'], sw: ['Python (scikit-learn, PyTorch)']
+  fe: [], sw: ['Python (scikit-learn, PyTorch)']
 },
 {
-  id: 'MEEN 408', title: 'Mechanics of Robotic Manipulators (Introduction to Robotics)', cr: 3, y: 4, s: 'Elective', kind: 'elective', area: 'mms', areaSure: false, d: 4, h: 8,
-  pre: ['MEEN 363', 'MEEN 357'],
+  id: 'MEEN 408', title: 'Introduction to Robotics', cr: 3, y: 4, s: 'Elective', kind: 'elective', ft: true, area: 'mms', areaSure: true, d: 4, h: 8,
+  pre: ['MEEN 364'],
   sum: 'Kinematics, dynamics and control of robot arms: transforms, forward and inverse kinematics, Jacobians, trajectory planning and robot control.',
   why: 'Core course for robotics, automation and manufacturing careers.',
   know: ['Linear algebra (matrices, rotations)', 'Rigid-body dynamics', 'Controls basics', 'Python/MATLAB'],
@@ -163,11 +281,11 @@ window.MEEN.courses.push(
   real: ['Industrial automation', 'Surgical robots', 'Warehouse robotics', 'Space robotics'],
   pit: ['Frame-convention mistakes'],
   res: [['book', 'Lynch & Park – Modern Robotics (free PDF + videos)', 'Lynch Park Modern Robotics'], ['book', 'Craig – Introduction to Robotics', 'Craig Introduction to Robotics Mechanics and Control'], ['video', 'Peter Corke – Robot Academy', 'Peter Corke robot academy']],
-  fe: ['Dynamics, Kinematics, and Vibrations', 'Measurements, Instrumentation, and Controls'], sw: ['Python', 'MATLAB Robotics Toolbox', 'ROS']
+  fe: [], sw: ['Python', 'MATLAB Robotics Toolbox', 'ROS']
 },
 {
-  id: 'MEEN 412', title: 'Precision Machine Design', cr: 3, y: 4, s: 'Elective', kind: 'elective', area: 'mms', areaSure: false, d: 4, h: 7,
-  pre: ['MEEN 368', 'MEEN 360'],
+  id: 'MEEN 412', title: 'Principles of Precision Machine Design', cr: 3, y: 4, s: 'Elective', kind: 'elective', area: 'mms', areaSure: true, d: 4, h: 7,
+  pre: ['MEEN 260', 'MEEN 363', 'MEEN 364'],
   sum: 'Design of machines with high accuracy: error budgets, kinematic coupling, flexures, bearings, thermal effects and metrology.',
   why: 'Highly relevant for semiconductor equipment, optics, metrology and advanced manufacturing.',
   know: ['Solid mechanics', 'Tolerancing', 'Heat transfer basics'],
@@ -182,10 +300,10 @@ window.MEEN.courses.push(
   real: ['Semiconductor lithography and wafer handling', 'Optical systems', 'Machine tools'],
   pit: [],
   res: [['book', 'Slocum – Precision Machine Design', 'Slocum Precision Machine Design'], ['course', 'MIT OCW 2.75 Precision Machine Design', 'MIT OCW 2.75']],
-  fe: ['Mechanical Design and Analysis'], sw: ['SolidWorks', 'FEA']
+  fe: [], sw: ['SolidWorks', 'FEA']
 },
 {
-  id: 'MEEN 431', title: 'Advanced System Dynamics and Controls', cr: 3, y: 4, s: 'Elective', kind: 'elective', area: 'mms', areaSure: false, d: 5, h: 9,
+  id: 'MEEN 431', title: 'Advanced System Dynamics and Controls', cr: 3, y: 4, s: 'Elective', kind: 'elective', area: 'mms', areaSure: true, d: 5, h: 9,
   pre: ['MEEN 364'],
   sum: 'State-space modeling, controllability and observability, pole placement, observers, optimal control (LQR), and digital control.',
   why: 'The next step after MEEN 364 for controls, robotics, aerospace GNC and autonomy roles, and a good base for graduate study.',
@@ -201,11 +319,11 @@ window.MEEN.courses.push(
   real: ['Flight control', 'Autonomous vehicles', 'Robotics', 'Process control'],
   pit: ['Weak linear algebra'],
   res: [['book', 'Franklin, Powell & Emami-Naeini – Feedback Control of Dynamic Systems', 'Franklin Powell Feedback Control of Dynamic Systems'], ['video', 'Steve Brunton – Control Bootcamp', 'Steve Brunton control bootcamp']],
-  fe: ['Measurements, Instrumentation, and Controls'], sw: ['MATLAB/Simulink', 'python-control']
+  fe: [], sw: ['MATLAB/Simulink', 'python-control']
 },
 {
-  id: 'MEEN 432', title: 'Automotive Engineering', cr: 3, y: 4, s: 'Elective', kind: 'elective', area: 'mms', areaSure: false, d: 3, h: 7,
-  pre: ['MEEN 363', 'MEEN 364'],
+  id: 'MEEN 432', title: 'Automotive Engineering', cr: 3, y: 4, s: 'Elective', kind: 'elective', area: 'mms', areaSure: true, d: 3, h: 7,
+  pre: ['MEEN 363'],
   sum: 'Vehicle dynamics and powertrains: longitudinal performance, braking, tire mechanics, handling, ride and suspension, and electrified powertrains, often with simulation projects.',
   why: 'Main elective for automotive, EV and motorsport careers. Pairs well with Formula SAE.',
   know: ['Dynamics', 'Vibrations', 'Controls basics', 'MATLAB/Simulink'],
@@ -220,11 +338,11 @@ window.MEEN.courses.push(
   real: ['Automotive OEMs and suppliers', 'EV startups', 'Motorsport', 'Autonomous vehicles'],
   pit: [],
   res: [['book', 'Gillespie – Fundamentals of Vehicle Dynamics', 'Gillespie Fundamentals of Vehicle Dynamics'], ['book', 'Milliken – Race Car Vehicle Dynamics', 'Milliken Race Car Vehicle Dynamics'], ['video', 'Engineering Explained', 'Engineering Explained']],
-  fe: ['Dynamics, Kinematics, and Vibrations'], sw: ['MATLAB/Simulink', 'CarSim (industry)']
+  fe: [], sw: ['MATLAB/Simulink', 'CarSim (industry)']
 },
 {
-  id: 'MEEN 433', title: 'Mechatronics', cr: 3, y: 4, s: 'Elective', kind: 'elective', area: 'mms', areaSure: false, d: 4, h: 9,
-  pre: ['MEEN 364', 'ECEN 215'],
+  id: 'MEEN 433', title: 'Mechatronics', cr: 3, y: 4, s: 'Elective', kind: 'elective', ft: true, area: 'data', areaSure: true, d: 4, h: 9,
+  pre: ['MEEN 364'],
   sum: 'Integrating mechanical systems with electronics, sensors, actuators and microcontrollers; embedded programming and a hands-on mechatronic project.',
   why: 'Very practical for robotics, consumer products, automation and medical devices. Lab-heavy and great for building a portfolio.',
   know: ['Circuits', 'Sensors from MEEN 260', 'Controls', 'Basic C or Python'],
@@ -239,10 +357,10 @@ window.MEEN.courses.push(
   real: ['Robotics', 'Consumer electronics', 'Medical devices', 'Industrial automation'],
   pit: ['Wiring errors', 'Starting integration too late'],
   res: [['book', 'Alciatore – Introduction to Mechatronics and Measurement Systems', 'Alciatore Introduction to Mechatronics and Measurement Systems'], ['tool', 'Arduino and STM32 tutorials', 'Arduino motor control tutorial'], ['video', 'GreatScott! / Ben Eater', 'Ben Eater electronics']],
-  fe: ['Measurements, Instrumentation, and Controls', 'Electricity and Magnetism'], sw: ['Arduino/C', 'MATLAB', 'KiCad']
+  fe: [], sw: ['Arduino/C', 'MATLAB', 'KiCad']
 },
 {
-  id: 'MEEN 434', title: 'Dynamics and Modeling of Mechatronic Systems', cr: 3, y: 4, s: 'Elective', kind: 'elective', area: 'mms', areaSure: false, d: 4, h: 8,
+  id: 'MEEN 434', title: 'Dynamics and Modeling of Mechatronic Systems', cr: 3, y: 4, s: 'Elective', kind: 'elective', ft: true, area: 'mms', areaSure: true, d: 4, h: 8,
   pre: ['MEEN 364'],
   sum: 'Modeling multi-domain systems (mechanical, electrical, hydraulic, thermal), often with bond graphs or energy-based methods, plus simulation and parameter identification.',
   why: 'Useful for system-level engineering, simulation roles and hydraulic or electromechanical system design.',
@@ -258,10 +376,10 @@ window.MEEN.courses.push(
   real: ['Hydraulic machinery', 'Vehicle systems', 'Aerospace actuators'],
   pit: [],
   res: [['book', 'Karnopp – System Dynamics: Modeling, Simulation, and Control of Mechatronic Systems', 'Karnopp System Dynamics Mechatronic Systems'], ['tool', 'Simscape / Modelica tutorials', 'Simscape tutorial']],
-  fe: ['Measurements, Instrumentation, and Controls'], sw: ['MATLAB/Simulink/Simscape', 'Modelica']
+  fe: [], sw: ['MATLAB/Simulink/Simscape', 'Modelica']
 },
 {
-  id: 'MEEN 440', title: 'Bio-inspired Engineering Design', cr: 3, y: 4, s: 'Elective', kind: 'elective', area: 'mms', areaSure: false, d: 3, h: 6,
+  id: 'MEEN 440', title: 'Bio-Inspired Design', cr: 3, y: 4, s: 'Elective', kind: 'elective', ft: true, area: 'mms', areaSure: true, d: 3, h: 6,
   pre: ['MEEN 368'],
   sum: 'Design methods that borrow from biological systems: structures, materials, locomotion and sensing in nature, applied to engineering design projects.',
   why: 'Good for biomedical, soft robotics and innovative product design interests.',
@@ -277,10 +395,10 @@ window.MEEN.courses.push(
   real: ['Soft robotics', 'Medical devices', 'Lightweight structures'],
   pit: [],
   res: [['tool', 'AskNature (Biomimicry Institute)', 'AskNature biomimicry']],
-  fe: ['Mechanical Design and Analysis'], sw: ['SolidWorks', '3D printing']
+  fe: [], sw: ['SolidWorks', '3D printing']
 },
 {
-  id: 'MEEN 441', title: 'Design of Mechanical Components', cr: 3, y: 4, s: 'Elective', kind: 'elective', area: 'mms', areaSure: false, d: 4, h: 8,
+  id: 'MEEN 441', title: 'Design of Mechanical Components and Systems', cr: 3, y: 4, s: 'Elective', kind: 'elective', area: 'mms', areaSure: true, d: 4, h: 8,
   pre: ['MEEN 368'],
   sum: 'Detailed design of machine elements: gears, bearings, shafts, fasteners, welds, springs, clutches, brakes and belts, with design projects.',
   why: 'The most directly useful elective for a product or machine design engineer. It also covers much of the PE Machine Design exam.',
@@ -296,11 +414,11 @@ window.MEEN.courses.push(
   real: ['Machine design', 'Heavy equipment', 'Gearboxes and drivetrains', 'Oilfield tools'],
   pit: ['Skipping catalog selection practice'],
   res: [['book', 'Shigley\'s Mechanical Engineering Design', 'Shigley Mechanical Engineering Design'], ['book', 'Norton – Machine Design', 'Norton Machine Design'], ['tool', 'SKF bearing catalog and calculator', 'SKF bearing calculator']],
-  fe: ['Mechanical Design and Analysis'], sw: ['SolidWorks', 'Excel', 'KISSsoft (industry)']
+  fe: [], sw: ['SolidWorks', 'Excel', 'KISSsoft (industry)']
 },
 {
-  id: 'MEEN 442', title: 'Computer-Aided Engineering', cr: 3, y: 4, s: 'Elective', kind: 'elective', area: 'mms', areaSure: false, d: 3, h: 7,
-  pre: ['MEEN 368', 'MEEN 357'],
+  id: 'MEEN 442', title: 'Computer-Aided Engineering', cr: 3, y: 4, s: 'Elective', kind: 'elective', ft: true, area: 'mms', areaSure: true, d: 3, h: 7,
+  pre: ['MEEN 363', 'MEEN 368'],
   sum: 'Using CAE tools in design: parametric modeling, simulation-driven design, FEA and CFD workflows, design optimization and automation.',
   why: 'Simulation skills are in demand across aerospace, automotive, energy and consumer products.',
   know: ['CAD', 'Solid mechanics', 'Numerical methods'],
@@ -315,11 +433,11 @@ window.MEEN.courses.push(
   real: ['CAE analyst roles', 'Product design', 'Aerospace structures'],
   pit: ['Trusting colorful results without checks'],
   res: [['tool', 'SolidWorks Simulation / ANSYS student', 'ANSYS student free download'], ['course', 'Cornell SimCafe (ANSYS tutorials)', 'Cornell SimCafe ANSYS']],
-  fe: ['Mechanical Design and Analysis', 'Computational Tools'], sw: ['SolidWorks', 'ANSYS', 'Python']
+  fe: [], sw: ['SolidWorks', 'ANSYS', 'Python']
 },
 {
-  id: 'MEEN 444', title: 'Finite Element Analysis', cr: 3, y: 4, s: 'Elective', kind: 'elective', area: 'mms', areaSure: false, d: 4, h: 9,
-  pre: ['MEEN 368', 'MEEN 357'],
+  id: 'MEEN 444', title: 'Finite Element Analysis in Mechanical Engineering', cr: 3, y: 4, s: 'Elective', kind: 'elective', area: 'mms', areaSure: true, d: 4, h: 9,
+  pre: ['MEEN 357', 'MEEN 368'],
   sum: 'Theory and practice of FEA: element formulations, stiffness matrices, isoparametric elements, 2D/3D solid elements, heat transfer, dynamics, and commercial software.',
   why: 'FEA is the most common simulation tool in mechanical engineering. Knowing the theory makes you a much better analyst.',
   know: ['Linear algebra', 'Solid mechanics', 'Numerical methods'],
@@ -334,11 +452,11 @@ window.MEEN.courses.push(
   real: ['Structural analysis in aerospace and automotive', 'Pressure vessels', 'Medical implants'],
   pit: ['Stress singularities mistaken for real peaks'],
   res: [['book', 'Logan – A First Course in the Finite Element Method', 'Logan A First Course in the Finite Element Method'], ['book', 'Cook – Concepts and Applications of FEA', 'Cook Concepts and Applications of Finite Element Analysis'], ['video', 'The Efficient Engineer – FEA', 'The Efficient Engineer finite element']],
-  fe: ['Mechanical Design and Analysis', 'Computational Tools'], sw: ['ANSYS', 'Abaqus', 'Python']
+  fe: [], sw: ['ANSYS', 'Abaqus', 'Python']
 },
 {
-  id: 'MEEN 445', title: 'Mechanics of Compliant Materials', cr: 3, y: 4, s: 'Elective', kind: 'elective', area: 'mms', areaSure: false, d: 4, h: 7,
-  pre: ['MEEN 368'],
+  id: 'MEEN 445', title: 'Mechanics of Compliant Materials', cr: 3, y: 4, s: 'Elective', kind: 'elective', ft: true, area: 'mms', areaSure: true, d: 4, h: 7,
+  pre: ['MEEN 344'],
   sum: 'Large-deformation behavior of soft materials such as elastomers, gels, polymers and biological tissue: hyperelasticity, viscoelasticity and applications.',
   why: 'Relevant to soft robotics, biomedical devices, seals and tires.',
   know: ['Solid mechanics', 'Linear algebra', 'Stress-strain behavior'],
@@ -353,11 +471,11 @@ window.MEEN.courses.push(
   real: ['Seals and gaskets', 'Tires', 'Medical devices', 'Soft robotics'],
   pit: [],
   res: [['book', 'Bower – Applied Mechanics of Solids (free online)', 'Bower Applied Mechanics of Solids']],
-  fe: ['Mechanics of Materials', 'Material Properties and Processing'], sw: ['Abaqus', 'Python']
+  fe: [], sw: ['Abaqus', 'Python']
 },
 {
-  id: 'MEEN 454', title: 'Tribology', cr: 3, y: 4, s: 'Elective', kind: 'elective', area: 'mms', areaSure: false, d: 3, h: 6,
-  pre: ['MEEN 368', 'MEEN 344'],
+  id: 'MEEN 454', title: 'Tribology – Mechanical Interface Design', cr: 3, y: 4, s: 'Elective', kind: 'elective', ft: true, area: 'mms', areaSure: true, d: 3, h: 6,
+  pre: ['MEEN 344', 'MEEN 368'],
   sum: 'Friction, wear and lubrication: surface contact, hydrodynamic and elastohydrodynamic lubrication, bearing design and wear mechanisms.',
   why: 'Friction and wear limit the life of bearings, engines, drilling tools and many other machines.',
   know: ['Contact mechanics basics', 'Fluid viscosity', 'Materials'],
@@ -372,10 +490,10 @@ window.MEEN.courses.push(
   real: ['Bearings and gears', 'Engines', 'Drilling and downhole tools', 'Hard drives and MEMS'],
   pit: [],
   res: [['book', 'Hutchings – Tribology: Friction and Wear of Engineering Materials', 'Hutchings Tribology Friction and Wear']],
-  fe: ['Mechanical Design and Analysis', 'Material Properties and Processing'], sw: []
+  fe: [], sw: []
 },
 {
-  id: 'MEEN 455', title: 'Engineering with Plastics', cr: 3, y: 4, s: 'Elective', kind: 'elective', area: 'mms', areaSure: false, d: 3, h: 6,
+  id: 'MEEN 455', title: 'Engineering with Plastics', cr: 3, y: 4, s: 'Elective', kind: 'elective', area: 'mms', areaSure: true, d: 3, h: 6,
   pre: ['MEEN 360'],
   sum: 'Designing parts with plastics: polymer behavior, creep, processing (injection molding, extrusion, thermoforming) and plastic part design rules.',
   why: 'Plastics are in almost every consumer product, medical device and vehicle. Plastic part design is a common entry-level design skill.',
@@ -391,11 +509,11 @@ window.MEEN.courses.push(
   real: ['Consumer products', 'Medical devices', 'Automotive interiors and parts'],
   pit: [],
   res: [['book', 'Malloy – Plastic Part Design for Injection Molding', 'Malloy Plastic Part Design for Injection Molding'], ['tool', 'Protolabs design guidelines', 'Protolabs injection molding design guide']],
-  fe: ['Material Properties and Processing'], sw: ['SolidWorks Plastics', 'Moldflow']
+  fe: [], sw: ['SolidWorks Plastics', 'Moldflow']
 },
 {
-  id: 'MEEN 471', title: 'Elements of Composite Materials', cr: 3, y: 4, s: 'Elective', kind: 'elective', area: 'mms', areaSure: false, d: 4, h: 7,
-  pre: ['MEEN 368', 'MEEN 223'],
+  id: 'MEEN 471', title: 'Elements of Composite Materials', cr: 3, y: 4, s: 'Elective', kind: 'elective', ft: true, area: 'mms', areaSure: true, d: 4, h: 7,
+  pre: ['MEEN 360', 'MEEN 361', 'MEEN 368'],
   sum: 'Fiber-reinforced composites: micromechanics, lamina and laminate analysis (classical lamination theory), failure criteria, and manufacturing.',
   why: 'Composites are central to aerospace, wind energy, automotive lightweighting and sporting goods.',
   know: ['Stress transformation', 'Linear algebra', 'Materials science'],
@@ -410,7 +528,7 @@ window.MEEN.courses.push(
   real: ['Aircraft structures', 'Wind turbine blades', 'Pressure vessels', 'Race cars'],
   pit: ['Matrix algebra errors'],
   res: [['book', 'Jones – Mechanics of Composite Materials', 'Jones Mechanics of Composite Materials'], ['book', 'Daniel & Ishai – Engineering Mechanics of Composite Materials', 'Daniel Ishai Engineering Mechanics of Composite Materials']],
-  fe: ['Material Properties and Processing', 'Mechanics of Materials'], sw: ['Python', 'ANSYS Composite PrepPost']
+  fe: [], sw: ['Python', 'ANSYS Composite PrepPost']
 },
 {
   id: 'MEEN 485', title: 'Directed Studies', cr: 3, y: 4, s: 'Elective', kind: 'elective', area: null, areaSure: true, d: 3, h: 9,

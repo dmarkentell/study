@@ -254,6 +254,55 @@ th { font-family: var(--f-mono); font-size: 0.72rem; text-transform: uppercase; 
 .steps li { list-style: none; display: grid; grid-template-columns: 2.2em 1fr; gap: 8px; }
 .steps li::before { counter-increment: step; content: counter(step); font-family: var(--f-mono); font-weight: 600; color: var(--accent); border: 1px solid var(--accent); border-radius: 50%; width: 1.8em; height: 1.8em; display: grid; place-items: center; font-size: 0.8rem; }
 
+input[type="date"], input[type="number"], input[type="text"], textarea {
+  font: inherit; color: var(--ink); background: var(--sheet); border: 1px solid var(--rule);
+  border-radius: var(--radius); padding: 6px 10px; max-width: 100%;
+}
+input[type="number"] { width: 6em; }
+textarea { width: 100%; resize: vertical; }
+
+/* Internship timeline */
+.timeline { list-style: none; padding: 0; margin: 0; display: grid; gap: 0; border-left: 2px solid var(--ink); }
+.timeline > li { padding: 0 0 22px 20px; position: relative; display: grid; gap: 6px; }
+.timeline > li::before { content: ""; position: absolute; left: -7px; top: 4px; width: 12px; height: 12px; background: var(--sheet); border: 2px solid var(--accent); border-radius: 50%; }
+.timeline > li + li { margin-top: 0; }
+.tl-head { display: grid; gap: 2px; }
+
+/* Student tips */
+.tips { display: grid; gap: 8px; }
+.tip { background: var(--sheet); border: 1px solid var(--rule); border-radius: var(--radius); padding: 12px 14px; display: grid; gap: 6px; min-width: 0; }
+.tip p { overflow-wrap: anywhere; white-space: pre-wrap; }
+.tip-head { display: flex; gap: 10px; flex-wrap: wrap; align-items: baseline; font-size: 0.9rem; }
+.tipform { display: grid; gap: 10px; background: var(--sheet); border: 1px dashed var(--rule); border-radius: var(--radius); padding: 14px; }
+
+/* My plan */
+.form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 10px 16px; }
+.form-grid label, label.stack { display: grid; gap: 4px; font-size: 0.85rem; color: var(--muted); }
+.form-grid input, label.stack textarea { color: var(--ink); }
+input[type="file"] { font: inherit; font-size: 0.85rem; max-width: 100%; }
+table.edit input, table.edit select { width: 100%; min-width: 0; padding: 4px 6px; }
+table.edit td { padding: 4px 6px; }
+table.edit input.short, input.short { width: 6em; }
+.linkbtn { background: none; border: 0; color: var(--accent); text-decoration: underline; cursor: pointer; font: inherit; font-size: 0.85rem; padding: 0; }
+.btn[disabled] { opacity: 0.5; cursor: progress; }
+.sem-h { font-size: 1.8rem; margin-top: 8px; }
+.timeline.weeks .witems { list-style: none; padding: 0; display: grid; gap: 4px; }
+.timeline.weeks .witems li.task { font-size: 0.88rem; }
+.timeline.weeks li.crunch::before { border-color: var(--d5); background: var(--d5); }
+.crunch-pill { background: transparent; border-color: var(--d5); color: var(--d5); font-weight: 600; }
+.mine { border-color: var(--accent); }
+.status-line { font-weight: 600; }
+.status-line[data-kind="done"] { color: var(--d1); }
+.status-line[data-kind="now"] { color: var(--accent); }
+.status-line[data-kind="planned"] { color: var(--d3); }
+.tag.status { border-color: var(--accent); color: var(--accent); }
+.roadmap-grid.mine { grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); min-width: 0; }
+.term-now > .label { color: var(--accent); font-weight: 600; }
+.roadmap-grid.mine .term { align-content: start; }
+.term-left { border: 1px dashed var(--rule); border-radius: var(--radius); padding: 8px; grid-column: 1 / -1; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); }
+.term-left > .label { grid-column: 1 / -1; }
+details > summary.label { cursor: pointer; padding: 4px 0; }
+
 @media (max-width: 560px) {
   .topbar { position: static; }
   .topbar-inner { gap: 4px; }

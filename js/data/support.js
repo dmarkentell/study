@@ -40,7 +40,7 @@ window.MEEN.courses.push(
   real: ['Automating test-data processing in every industry', 'Python scripts drive CAD/CAE tools (SolidWorks API, Abaqus, ANSYS)', 'Data analysis and machine learning roles start from this skill set'],
   pit: ['Copying code without understanding it', 'Starting projects the night before; debugging takes longer than writing', 'Not commenting or naming variables clearly'],
   res: [['book', 'Automate the Boring Stuff with Python (free online)', 'Automate the Boring Stuff with Python'], ['video', 'Corey Schafer – Python tutorials', 'Corey Schafer Python tutorial'], ['practice', 'Codewars / LeetCode easy problems', 'codewars python beginner']],
-  fe: ['Computational Tools'], sw: ['Python', 'Jupyter', 'VS Code', 'Git']
+  fe: [], sw: ['Python', 'Jupyter', 'VS Code', 'Git']
 },
 {
   id: 'MATH 151', title: 'Engineering Mathematics I (Calculus I)', cr: 4, y: 1, s: 'Fall', kind: 'support', d: 3, h: 8,

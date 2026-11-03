@@ -195,7 +195,7 @@ window.MEEN.courses.push(
   real: ['FEA and CFD solvers', 'Writing analysis and test-data tools', 'Control and robotics simulation', 'Data and ML roles'],
   pit: ['Starting projects late', 'Not testing functions in isolation', 'Weak Python skills from ENGR 102'],
   res: [['book', 'Chapra & Canale – Numerical Methods for Engineers', 'Chapra Canale Numerical Methods for Engineers'], ['book', 'Kiusalaas – Numerical Methods in Engineering with Python', 'Kiusalaas Numerical Methods in Engineering with Python'], ['video', 'Steve Brunton – Engineering math', 'Steve Brunton numerical methods'], ['course', 'MIT OCW 2.086 Numerical Computation for ME', 'MIT OCW 2.086']],
-  fe: ['Mathematics', 'Computational Tools'], sw: ['Python (NumPy, SciPy, matplotlib)', 'Git']
+  fe: ['Mathematics'], sw: ['Python (NumPy, SciPy, matplotlib)', 'Git']
 },
 {
   id: 'MEEN 360', title: 'Materials and Manufacturing Selection in Design', cr: 3, y: 3, s: 'Spring', kind: 'core', d: 3, h: 7,
@@ -420,19 +420,19 @@ window.MEEN.courses.push(
 {
   id: 'MEEN 399', title: 'High Impact Experience for Mechanical Engineers', cr: 0, y: 2, s: 'Summer', kind: 'core', d: 1, h: 0,
   pre: [],
-  sum: 'Zero-credit graduation requirement recorded after a qualifying high-impact experience such as an internship, co-op, undergraduate research, study abroad, or another approved experience. The plan of study shows it in the summer after sophomore year; check with MEEN advising for what qualifies and how to register.',
-  why: 'This is your first real engineering experience and the most useful item on an early résumé. Plan for it by fall of sophomore year.',
-  know: ['A résumé reviewed by the career center', 'A list of target companies or research labs'],
+  sum: 'Zero-credit graduation requirement. You complete an approved experience, then register for MEEN 399 in the following semester (for a summer internship, the fall after). The plan of study places the experience in the summer after sophomore year.',
+  why: 'This is usually your first real engineering experience and the strongest item on an early résumé. Many options count, so plan one by fall of sophomore year.',
+  know: ['A résumé reviewed by the career center', 'Which approved experience you are aiming for'],
   units: [
-    ['Find an experience', 'career fairs (fall and spring); Handshake; research lab openings; co-op programs; study abroad', 'Apply early: many internships hire in September and October for the next summer.', 'Which three companies or labs are you targeting? | When is the next career fair?'],
-    ['Do the work well', 'setting goals with your supervisor; keeping a work log; asking for feedback', 'Write down one result per week with numbers (time saved, cost cut, tests run).', 'What did you deliver this week? | Who can be a reference for you?'],
-    ['Reflect and report', 'reflection requirements; turning the experience into résumé bullets and interview stories', 'Write STAR stories (situation, task, action, result) while details are fresh.', 'What is your best STAR story from the experience? | What did you learn that a class did not teach?']
+    ['Approved experiences', 'summer internship; co-op (ENGR 385); any 491 research in the College of Engineering; Aggies Invent; Startup Aggieland; Engineers Without Borders project; approved design competitions; leadership in an engineering student org; approved minor or certificate (e.g., Energy Engineering, International Engineering, Zachry Leadership); University Honors; study abroad; other experiences approved by the department', 'Pick the option that also builds toward your career track, such as research for grad school or an internship for industry.', 'Which approved experience fits your plans? | Which ones could you start this semester?'],
+    ['Find and do it well', 'career fairs; Handshake; research lab openings; org leadership roles; setting goals; keeping a work log', 'Write down one result per week with numbers (time saved, tests run, parts designed).', 'What did you deliver this week? | Who can be a reference for you?'],
+    ['Register and reflect', 'register for MEEN 399 the semester after the experience; reflection requirements; turning it into résumé bullets and STAR stories', 'Write STAR stories (situation, task, action, result) while details are fresh.', 'When will you register for MEEN 399? | What is your best STAR story from it?']
   ],
-  top: ['Getting an internship or research position', 'Résumé bullets with results'],
-  take: ['Start looking a full year ahead.', 'Research positions count and are often easier to get early.'],
-  real: ['Internships often lead to full-time offers'],
-  pit: ['Starting the search in spring', 'Not documenting results during the experience'],
-  res: [['tool', 'Texas A&M Career Center', 'Texas A&M career center engineering'], ['tool', 'Aggies Undergraduate Research (LAUNCH)', 'Texas A&M LAUNCH undergraduate research']],
+  top: ['Choosing an approved experience', 'Registering the semester after', 'Résumé bullets with results'],
+  take: ['Start looking a full year ahead.', 'Research, competitions, org leadership and study abroad count, not just internships.'],
+  real: ['Internships and co-ops often lead to full-time offers'],
+  pit: ['Starting the search in spring', 'Forgetting to register for MEEN 399 after the experience', 'Not documenting results during the experience'],
+  res: [['tool', 'Texas A&M Career Center', 'Texas A&M career center engineering'], ['tool', 'Aggies Invent', 'Texas A&M Aggies Invent'], ['tool', 'Texas A&M LAUNCH undergraduate research', 'Texas A&M LAUNCH undergraduate research']],
   fe: [], sw: []
 }
 );

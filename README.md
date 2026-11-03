@@ -1,5 +1,7 @@
 # MEEN Field Guide
 
+> Picking this project up? Start with [HANDOFF.md](HANDOFF.md).
+
 An unofficial study guide to the Texas A&M (College Station) BS in Mechanical Engineering.
 
 For every course it lists:
@@ -17,6 +19,11 @@ It also has:
 - **Career tracks**: 11 industries (aerospace, automotive/EV, oil & gas, power, HVAC, robotics, manufacturing, semiconductors, biomedical, simulation, grad school), each with courses to master, recommended electives, skills, software, certifications and example employers
 - **Semester planner**: mark completed courses, pick next semester, see weekly workload, missing prerequisites, and technical-elective area coverage
 - **How to study**: weekly routine, problem-solving method, exam timeline, campus resources and an FE exam map
+- **FE exam planner**: countdown to your exam date and a week-by-week plan weighted by question counts and your weak areas
+- **Internship timeline**: what to do each semester for internships, MEEN 399 and the full-time search
+- **My plan**: upload a degree evaluation, degree plan or transcript, and each semester's syllabi. Claude reads them (on the claude.ai version) and you review the result. The guide then shows your own roadmap, fills in the planner, marks your courses everywhere, and builds a semester calendar, an exam study plan and a grade calculator. On claude.ai this is saved privately to your account; elsewhere it stays in your browser and can be entered by hand.
+- **Grade distributions**: each course page links to a search for grade distributions by instructor
+- **Student tips**: on the hosted claude.ai version, students can post tips, difficulty and hours for each course; the page shows community averages. The static copy (GitHub Pages) shows a note instead, since it has no shared storage.
 
 Progress is saved in your browser only (localStorage).
 
@@ -38,17 +45,22 @@ All content is in `js/data/`:
 | --- | --- |
 | `support.js` | math, science and common-engineering courses (field key at the top) |
 | `core.js` | required MEEN courses |
-| `electives.js` | MEEN technical electives and the area rule |
-| `tracks.js` | career tracks and FE knowledge areas |
+| `electives.js`, `electives2.js` | MEEN technical and general electives, the area rule, and pre-approved non-MEEN electives |
+| `tracks.js` | career tracks, FE knowledge areas and the internship timeline |
 
 The plan of study grid is the `PLAN` list near the top of `js/app.js`.
+
+## Third-party code
+
+`vendor/pdf.worker.min.js` is from [PDF.js](https://github.com/mozilla/pdf.js) 3.11.174 (Apache License 2.0); the main PDF.js script loads from cdnjs.
 
 ## Accuracy
 
 The plan of study follows the current Texas A&M catalog. Some details are best estimates and are marked in the data:
 
 - prerequisites: confirm in Howdy
-- technical elective titles and area assignments (`areaSure: false`): confirm with the current MEEN technical elective list from advising
+- electives with a `note` field are not on the current list or have extra prerequisite details
+- technical electives: titles, areas and prerequisites follow the department's current list on engineering.tamu.edu; unit outlines for electives are typical content, not syllabi
 - difficulty and hour ratings: planning estimates, not official data
 
 Corrections are welcome: edit the data files.
