@@ -281,7 +281,7 @@
           (chain.length ? '<span class="label">Full prerequisite chain</span><div class="pills">' + chain.map(pre).join('') + '</div>' : '') +
         '</section>' +
         '<section class="sec"><h2>Exams, tools and careers</h2>' +
-          '<span class="label">FE Mechanical areas</span>' + (c.fe.length ? '<div class="pills">' + c.fe.map(function (f) { return '<span class="pill">' + esc(f) + '</span>'; }).join('') + '</div>' : '<p class="muted">None.</p>') +
+          '<span class="label">FE Mechanical areas</span>' + (c.kind === 'elective' ? '<p class="muted">Not needed for the FE. The exam covers material from the required courses.</p>' : c.fe.length ? '<div class="pills">' + c.fe.map(function (f) { return '<span class="pill">' + esc(f) + '</span>'; }).join('') + '</div>' : '<p class="muted">None.</p>') +
           '<span class="label">Grades and practice</span><p><a href="' + gradeUrl(c) + '" target="_blank" rel="noopener">Grade distributions for ' + esc(c.id) + ' by instructor</a>' +
             '</p>' +
           '<span class="label">Software</span>' + (c.sw.length ? '<p>' + c.sw.map(esc).join(', ') + '</p>' : '<p class="muted">None in particular.</p>') +
@@ -418,7 +418,7 @@
   function viewStudy() {
     var feRows = M.fe.map(function (row) {
       var area = row[0];
-      var cs = COURSES.filter(function (c) { return c.fe.indexOf(area) !== -1; }).sort(order);
+      var cs = COURSES.filter(function (c) { return c.kind !== 'elective' && c.fe.indexOf(area) !== -1; }).sort(order);
       return '<tr><td>' + esc(area) + '</td><td class="mono">' + row[1] + '–' + row[2] + '</td><td>' + cs.map(function (c) { return '<a href="' + href(c.id) + '">' + esc(c.id) + '</a>'; }).join(', ') + '</td></tr>';
     }).join('');
     return '' +
@@ -463,7 +463,7 @@
         '</ul></section>' +
       '</div>' +
       '<section class="sec"><h2>FE exam map <span class="label">Fundamentals of Engineering, Mechanical</span></h2>' +
-        '<p>Take the FE in your final year or just after graduating, while the material is fresh. Passing makes you an Engineer in Training (EIT), the first step to a PE license. The exam provides the NCEES FE Reference Handbook; practice finding equations in it. Build a study schedule in the <a href="#fe-plan">FE planner</a>.</p>' +
+        '<p>Take the FE in your final year or just after graduating, while the material is fresh. Passing makes you an Engineer in Training (EIT), the first step to a PE license. The exam provides the NCEES FE Reference Handbook; practice finding equations in it. The exam only covers material from the required courses below, so you do not need any particular elective for it. Build a study schedule in the <a href="#fe-plan">FE planner</a>.</p>' +
         '<div class="tablewrap"><table><thead><tr><th>Knowledge area</th><th>Questions (approx.)</th><th>Courses that cover it</th></tr></thead><tbody>' + feRows + '</tbody></table></div>' +
       '</section>';
   }
@@ -531,7 +531,7 @@
       '<section class="sec"><h2>Areas and time <span class="label">question counts are approximate (110 total)</span></h2>' +
         '<div class="tablewrap"><table><thead><tr><th>Knowledge area</th><th>Questions</th><th>Your level</th><th>Hours</th><th>Review</th></tr></thead><tbody>' +
         rows.map(function (r) {
-          var cs = COURSES.filter(function (c) { return c.fe.indexOf(r.area) !== -1 && c.kind !== 'elective'; }).sort(order).slice(0, 4);
+          var cs = COURSES.filter(function (c) { return c.fe.indexOf(r.area) !== -1 && c.kind !== 'elective'; }).sort(order);
           return '<tr><td>' + esc(r.area) + '</td><td class="mono">' + r.lo + '–' + r.hi + '</td><td><select data-conf="' + esc(r.area) + '" aria-label="Your level in ' + esc(r.area) + '">' +
             ['weak', 'ok', 'strong'].map(function (k) { return '<option value="' + k + '"' + (r.conf === k ? ' selected' : '') + '>' + (k === 'ok' ? 'OK' : k[0].toUpperCase() + k.slice(1)) + '</option>'; }).join('') +
             '</select></td><td class="mono">' + r.h + '</td><td>' + cs.map(function (c) { return '<a href="' + href(c.id) + '">' + esc(c.id) + '</a>'; }).join(', ') + '</td></tr>';

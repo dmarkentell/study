@@ -25,7 +25,7 @@ window.MEEN.courses.push(
   real: ['Rotating machinery (pumps, compressors, turbines)', 'Automotive NVH', 'Aerospace structures'],
   pit: ['Weak linear algebra'],
   res: [['book', 'Rao – Mechanical Vibrations', 'Rao Mechanical Vibrations'], ['book', 'Inman – Engineering Vibration', 'Inman Engineering Vibration']],
-  fe: ['Dynamics, Kinematics, and Vibrations'], sw: ['Python', 'MATLAB']
+  fe: [], sw: ['Python', 'MATLAB']
 },
 {
   id: 'MEEN 407', title: 'Intuitive and Counter-Intuitive Mechanisms', cr: 3, y: 4, s: 'Elective', kind: 'elective', ft: true, area: 'mms', areaSure: true, d: 3, h: 6,
@@ -45,7 +45,7 @@ window.MEEN.courses.push(
   real: ['Consumer products', 'Robotics', 'Space deployables', 'Medical devices'],
   pit: [],
   res: [['book', 'Norton – Design of Machinery', 'Norton Design of Machinery'], ['book', 'Howell – Compliant Mechanisms', 'Howell Compliant Mechanisms']],
-  fe: ['Dynamics, Kinematics, and Vibrations', 'Mechanical Design and Analysis'], sw: ['SolidWorks Motion', 'Linkage simulators']
+  fe: [], sw: ['SolidWorks Motion', 'Linkage simulators']
 },
 {
   id: 'MEEN 451', title: 'Viscoelastic Materials', cr: 3, y: 4, s: 'Elective', kind: 'elective', ft: true, area: 'mms', areaSure: true, d: 4, h: 7,
@@ -64,7 +64,7 @@ window.MEEN.courses.push(
   real: ['Seals and gaskets', 'Vibration damping', 'Plastic parts', 'Biomechanics'],
   pit: [],
   res: [['book', 'Lakes – Viscoelastic Materials', 'Lakes Viscoelastic Materials'], ['book', 'Brinson – Polymer Engineering Science and Viscoelasticity', 'Brinson Polymer Engineering Science and Viscoelasticity']],
-  fe: ['Material Properties and Processing', 'Mechanics of Materials'], sw: ['Python']
+  fe: [], sw: ['Python']
 },
 {
   id: 'MEEN 453', title: 'Additive & Subtractive Processes in Custom Manufacturing', cr: 3, y: 4, s: 'Elective', kind: 'elective', area: 'mms', areaSure: true, d: 3, h: 7,
@@ -84,7 +84,7 @@ window.MEEN.courses.push(
   real: ['Prototyping shops', 'Aerospace and medical parts', 'Tooling'],
   pit: [],
   res: [['book', 'Gibson, Rosen & Stucker – Additive Manufacturing Technologies', 'Gibson Rosen Stucker Additive Manufacturing Technologies'], ['tool', 'Fusion 360 CAM tutorials', 'Fusion 360 CAM tutorial']],
-  fe: ['Material Properties and Processing'], sw: ['Fusion 360 CAM', 'Slicer software']
+  fe: [], sw: ['Fusion 360 CAM', 'Slicer software']
 },
 {
   id: 'MEEN 458', title: 'Processing and Characterization of Polymers', cr: 3, y: 4, s: 'Elective', kind: 'elective', area: 'mms', areaSure: true, d: 3, h: 6,
@@ -104,7 +104,7 @@ window.MEEN.courses.push(
   real: ['Plastics and packaging', 'Medical devices', 'Composites'],
   pit: [],
   res: [['book', 'Osswald – Materials Science of Polymers for Engineers', 'Osswald Materials Science of Polymers for Engineers']],
-  fe: ['Material Properties and Processing'], sw: []
+  fe: [], sw: []
 },
 {
   id: 'MEEN 459', title: 'Sound and Vibration Measurements', cr: 3, y: 4, s: 'Elective', kind: 'elective', ft: true, area: 'mms', areaSure: true, d: 3, h: 7,
@@ -123,7 +123,7 @@ window.MEEN.courses.push(
   real: ['Automotive NVH', 'Machinery condition monitoring', 'Aerospace testing', 'Consumer product acoustics'],
   pit: ['Leakage and aliasing errors'],
   res: [['book', 'Brandt – Noise and Vibration Analysis', 'Brandt Noise and Vibration Analysis signal analysis'], ['video', 'Siemens / NI vibration testing tutorials', 'modal impact testing tutorial']],
-  fe: ['Measurements, Instrumentation, and Controls', 'Dynamics, Kinematics, and Vibrations'], sw: ['Python', 'LabVIEW', 'MATLAB']
+  fe: [], sw: ['Python', 'LabVIEW', 'MATLAB']
 },
 {
   id: 'MEEN 460', title: 'Corrosion Engineering', cr: 3, y: 4, s: 'Elective', kind: 'elective', ft: true, area: 'mms', areaSure: true, d: 3, h: 6,
@@ -142,7 +142,7 @@ window.MEEN.courses.push(
   real: ['Pipelines and oilfield equipment', 'Chemical plants', 'Offshore structures', 'Infrastructure'],
   pit: [],
   res: [['book', 'Jones – Principles and Prevention of Corrosion', 'Jones Principles and Prevention of Corrosion'], ['tool', 'AMPP (formerly NACE) student resources', 'AMPP corrosion student']],
-  fe: ['Material Properties and Processing'], sw: []
+  fe: [], sw: []
 },
 {
   id: 'MEEN 475', title: 'Materials in Design', cr: 3, y: 4, s: 'Elective', kind: 'elective', area: 'mms', areaSure: true, d: 3, h: 6,
@@ -161,7 +161,7 @@ window.MEEN.courses.push(
   real: ['Product design', 'Aerospace and automotive lightweighting', 'Sustainability engineering'],
   pit: [],
   res: [['book', 'Ashby – Materials Selection in Mechanical Design', 'Ashby Materials Selection in Mechanical Design'], ['tool', 'Ansys Granta EduPack', 'Granta EduPack']],
-  fe: ['Material Properties and Processing', 'Mechanical Design and Analysis'], sw: ['Granta EduPack']
+  fe: [], sw: ['Granta EduPack']
 },
 {
   id: 'MEEN 488', title: 'Human Sensing Technologies', cr: 3, y: 4, s: 'Elective', kind: 'elective', ft: true, area: 'mms', areaSure: true, d: 3, h: 7,
@@ -180,7 +180,7 @@ window.MEEN.courses.push(
   real: ['Wearables', 'Medical devices', 'Sports technology', 'Human-robot interaction'],
   pit: [],
   res: [['video', 'Sensor fusion tutorials (MATLAB Tech Talks)', 'MATLAB Tech Talks sensor fusion']],
-  fe: ['Measurements, Instrumentation, and Controls'], sw: ['Python', 'MATLAB', 'Arduino']
+  fe: [], sw: ['Python', 'MATLAB', 'Arduino']
 },
 
 /* ---- Thermo-fluid and Energy Systems ---- */
@@ -201,7 +201,7 @@ window.MEEN.courses.push(
   real: ['Plant engineering', 'Energy consulting', 'Industrial Assessment Centers'],
   pit: [],
   res: [['book', 'Capehart, Turner & Kennedy – Guide to Energy Management', 'Capehart Guide to Energy Management'], ['tool', 'DOE Better Plants resources', 'DOE Better Plants industrial energy']],
-  fe: ['Thermodynamics', 'Engineering Economics'], sw: ['Excel']
+  fe: [], sw: ['Excel']
 },
 {
   id: 'MEEN 416', title: 'Smart Building Technology', cr: 3, y: 4, s: 'Elective', kind: 'elective', area: 'thermo', areaSure: true, d: 3, h: 6,
@@ -220,7 +220,7 @@ window.MEEN.courses.push(
   real: ['Building automation companies', 'MEP consulting', 'Facilities engineering'],
   pit: [],
   res: [['tool', 'ASHRAE Guideline 36 overview', 'ASHRAE Guideline 36 high performance sequences']],
-  fe: ['Thermodynamics', 'Measurements, Instrumentation, and Controls'], sw: ['Python', 'BAS software']
+  fe: [], sw: ['Python', 'BAS software']
 },
 {
   id: 'MEEN 417', title: 'Basics of Plasma Engineering and Applications', cr: 3, y: 4, s: 'Elective', kind: 'elective', area: 'thermo', areaSure: true, d: 4, h: 7,
@@ -240,7 +240,7 @@ window.MEEN.courses.push(
   real: ['Semiconductor equipment', 'Surface treatment', 'Space propulsion'],
   pit: [],
   res: [['book', 'Chen – Introduction to Plasma Physics and Controlled Fusion', 'Chen Introduction to Plasma Physics']],
-  fe: ['Electricity and Magnetism'], sw: []
+  fe: [], sw: []
 },
 {
   id: 'MEEN 436', title: 'Principles of Heating, Ventilation and Air Conditioning', cr: 3, y: 4, s: 'Elective', kind: 'elective', area: 'thermo', areaSure: true, d: 3, h: 7,
@@ -259,7 +259,7 @@ window.MEEN.courses.push(
   real: ['MEP consulting', 'HVAC manufacturers', 'Data centers and hospitals'],
   pit: ['Misreading the psychrometric chart'],
   res: [['book', 'McQuiston, Parker & Spitler – Heating, Ventilating and Air Conditioning', 'McQuiston Parker Spitler HVAC analysis and design'], ['tool', 'ASHRAE student membership', 'ASHRAE student membership']],
-  fe: ['Thermodynamics', 'Fluid Mechanics', 'Heat Transfer'], sw: ['Revit MEP', 'Trane TRACE or Carrier HAP']
+  fe: [], sw: ['Revit MEP', 'Trane TRACE or Carrier HAP']
 },
 {
   id: 'MEEN 439', title: 'Solar Energy Engineering', cr: 3, y: 4, s: 'Elective', kind: 'elective', ft: true, area: 'thermo', areaSure: true, d: 3, h: 6,
@@ -278,7 +278,7 @@ window.MEEN.courses.push(
   real: ['Solar developers and EPC firms', 'Utilities', 'Energy consulting'],
   pit: [],
   res: [['book', 'Duffie & Beckman – Solar Engineering of Thermal Processes', 'Duffie Beckman Solar Engineering of Thermal Processes'], ['tool', 'NREL PVWatts calculator', 'NREL PVWatts']],
-  fe: ['Thermodynamics', 'Heat Transfer', 'Engineering Economics'], sw: ['PVWatts', 'SAM (NREL)']
+  fe: [], sw: ['PVWatts', 'SAM (NREL)']
 },
 {
   id: 'MEEN 469', title: 'Alternative Energy Conservation', cr: 3, y: 4, s: 'Elective', kind: 'elective', ft: true, area: 'thermo', areaSure: true, d: 3, h: 6,
@@ -298,7 +298,7 @@ window.MEEN.courses.push(
   real: ['Renewable developers', 'Utilities', 'Energy policy and consulting'],
   pit: [],
   res: [['book', 'MacKay – Sustainable Energy Without the Hot Air (free)', 'Sustainable Energy Without the Hot Air']],
-  fe: ['Thermodynamics'], sw: ['Excel']
+  fe: [], sw: ['Excel']
 },
 {
   id: 'MEEN 477', title: 'Air Pollution Engineering', cr: 3, y: 4, s: 'Elective', kind: 'elective', area: 'thermo', areaSure: true, d: 3, h: 6,
@@ -318,7 +318,7 @@ window.MEEN.courses.push(
   real: ['Environmental compliance', 'Refineries and power plants', 'Consulting'],
   pit: [],
   res: [['book', 'de Nevers – Air Pollution Control Engineering', 'de Nevers Air Pollution Control Engineering'], ['tool', 'EPA AP-42 emission factors', 'EPA AP-42 emission factors']],
-  fe: ['Fluid Mechanics', 'Thermodynamics'], sw: ['Python', 'Excel']
+  fe: [], sw: ['Python', 'Excel']
 },
 {
   id: 'MEEN 483', title: 'Optical Techniques for Engineers', cr: 3, y: 4, s: 'Elective', kind: 'elective', ft: true, area: 'thermo', areaSure: true, d: 3, h: 6,
@@ -338,7 +338,7 @@ window.MEEN.courses.push(
   real: ['Fluid and combustion research', 'Metrology', 'Non-destructive inspection'],
   pit: [],
   res: [['book', 'Hecht – Optics', 'Hecht Optics textbook']],
-  fe: ['Measurements, Instrumentation, and Controls'], sw: ['Python', 'ImageJ']
+  fe: [], sw: ['Python', 'ImageJ']
 },
 {
   id: 'MEEN 498', title: 'Computational Fluid Dynamics for Engineering and Biological Applications', cr: 3, y: 4, s: 'Elective', kind: 'elective', ft: true, area: 'thermo', areaSure: true, d: 4, h: 9,
@@ -357,7 +357,7 @@ window.MEEN.courses.push(
   real: ['Aerospace and automotive aerodynamics', 'HVAC and data-center airflow', 'Biomedical devices'],
   pit: ['Trusting results without a grid study'],
   res: [['book', 'Versteeg & Malalasekera – Introduction to CFD', 'Versteeg Malalasekera Introduction to Computational Fluid Dynamics'], ['video', 'Lorena Barba – CFD Python (12 steps to Navier-Stokes)', 'CFD Python 12 steps to Navier-Stokes'], ['tool', 'OpenFOAM tutorials', 'OpenFOAM tutorial']],
-  fe: ['Fluid Mechanics'], sw: ['Python', 'ANSYS Fluent', 'OpenFOAM']
+  fe: [], sw: ['Python', 'ANSYS Fluent', 'OpenFOAM']
 },
 
 /* ---- General electives listed by the department (not technical electives) ---- */
@@ -378,7 +378,7 @@ window.MEEN.courses.push(
   real: ['Project and engineering management'],
   pit: [],
   res: [['book', 'Sutherland – Scrum', 'Sutherland Scrum The Art of Doing Twice the Work']],
-  fe: ['Ethics and Professional Practice'], sw: ['Jira or Trello']
+  fe: [], sw: ['Jira or Trello']
 },
 {
   id: 'MEEN 497', title: 'Innovation Mindset for Design and Research', cr: 3, y: 4, s: 'Elective', kind: 'elective', ft: true, area: 'general', areaSure: true, d: 2, h: 5,
