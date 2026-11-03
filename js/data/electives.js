@@ -144,7 +144,7 @@ window.MEEN.courses.push(
   real: ['Predictive maintenance', 'Design optimization', 'Manufacturing quality control', 'Autonomous systems'],
   pit: ['Data leakage', 'Skipping validation'],
   res: [['book', 'Géron – Hands-On Machine Learning', 'Geron Hands-On Machine Learning'], ['video', 'Steve Brunton – Machine learning for engineers', 'Steve Brunton machine learning'], ['course', 'Andrew Ng – Machine Learning Specialization', 'Andrew Ng machine learning specialization']],
-  fe: ['Computational Tools', 'Probability and Statistics'], sw: ['Python (scikit-learn, PyTorch)']
+  fe: ['Probability and Statistics'], sw: ['Python (scikit-learn, PyTorch)']
 },
 {
   id: 'MEEN 408', title: 'Mechanics of Robotic Manipulators (Introduction to Robotics)', cr: 3, y: 4, s: 'Elective', kind: 'elective', area: 'mms', areaSure: false, d: 4, h: 8,
@@ -315,7 +315,7 @@ window.MEEN.courses.push(
   real: ['CAE analyst roles', 'Product design', 'Aerospace structures'],
   pit: ['Trusting colorful results without checks'],
   res: [['tool', 'SolidWorks Simulation / ANSYS student', 'ANSYS student free download'], ['course', 'Cornell SimCafe (ANSYS tutorials)', 'Cornell SimCafe ANSYS']],
-  fe: ['Mechanical Design and Analysis', 'Computational Tools'], sw: ['SolidWorks', 'ANSYS', 'Python']
+  fe: ['Mechanical Design and Analysis'], sw: ['SolidWorks', 'ANSYS', 'Python']
 },
 {
   id: 'MEEN 444', title: 'Finite Element Analysis', cr: 3, y: 4, s: 'Elective', kind: 'elective', area: 'mms', areaSure: false, d: 4, h: 9,
@@ -334,7 +334,7 @@ window.MEEN.courses.push(
   real: ['Structural analysis in aerospace and automotive', 'Pressure vessels', 'Medical implants'],
   pit: ['Stress singularities mistaken for real peaks'],
   res: [['book', 'Logan – A First Course in the Finite Element Method', 'Logan A First Course in the Finite Element Method'], ['book', 'Cook – Concepts and Applications of FEA', 'Cook Concepts and Applications of Finite Element Analysis'], ['video', 'The Efficient Engineer – FEA', 'The Efficient Engineer finite element']],
-  fe: ['Mechanical Design and Analysis', 'Computational Tools'], sw: ['ANSYS', 'Abaqus', 'Python']
+  fe: ['Mechanical Design and Analysis'], sw: ['ANSYS', 'Abaqus', 'Python']
 },
 {
   id: 'MEEN 445', title: 'Mechanics of Compliant Materials', cr: 3, y: 4, s: 'Elective', kind: 'elective', area: 'mms', areaSure: false, d: 4, h: 7,

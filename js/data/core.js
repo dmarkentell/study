@@ -195,7 +195,7 @@ window.MEEN.courses.push(
   real: ['FEA and CFD solvers', 'Writing analysis and test-data tools', 'Control and robotics simulation', 'Data and ML roles'],
   pit: ['Starting projects late', 'Not testing functions in isolation', 'Weak Python skills from ENGR 102'],
   res: [['book', 'Chapra & Canale – Numerical Methods for Engineers', 'Chapra Canale Numerical Methods for Engineers'], ['book', 'Kiusalaas – Numerical Methods in Engineering with Python', 'Kiusalaas Numerical Methods in Engineering with Python'], ['video', 'Steve Brunton – Engineering math', 'Steve Brunton numerical methods'], ['course', 'MIT OCW 2.086 Numerical Computation for ME', 'MIT OCW 2.086']],
-  fe: ['Mathematics', 'Computational Tools'], sw: ['Python (NumPy, SciPy, matplotlib)', 'Git']
+  fe: ['Mathematics'], sw: ['Python (NumPy, SciPy, matplotlib)', 'Git']
 },
 {
   id: 'MEEN 360', title: 'Materials and Manufacturing Selection in Design', cr: 3, y: 3, s: 'Spring', kind: 'core', d: 3, h: 7,

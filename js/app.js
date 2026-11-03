@@ -44,7 +44,7 @@
       var raw = localStorage.getItem(KEY);
       if (raw) {
         var s = JSON.parse(raw);
-        return { done: s.done || [], units: s.units || {}, plan: s.plan || [], example: !!s.example, ui: s.ui || {} };
+        return { done: s.done || [], units: s.units || {}, plan: s.plan || [], example: !!s.example, ui: s.ui || {}, cards: s.cards || {}, fe: s.fe || {} };
       }
     } catch (e) { /* storage unavailable */ }
     return exampleState();
@@ -59,7 +59,7 @@
         if (i < cut) done.push(id); else if (i === cut) plan.push(id);
       });
     });
-    return { done: done, units: {}, plan: plan, example: true, ui: {} };
+    return { done: done, units: {}, plan: plan, example: true, ui: {}, cards: {}, fe: {} };
   }
   function save() {
     try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) { /* ignore */ }
@@ -111,6 +111,8 @@
   function tracksFor(id) {
     return M.tracks.filter(function (t) { return t.master.indexOf(id) !== -1 || t.electives.indexOf(id) !== -1; });
   }
+  function gradeUrl(c) { return 'https://www.google.com/search?q=' + encodeURIComponent('Texas A&M grade distribution ' + c.id); }
+  function cardCount(id) { return M.cards.filter(function (cd) { return cd[0] === id; }).length; }
   function missingPre(c) { return c.pre.filter(function (p) { return !isDone(p); }); }
 
   function card(c) {
@@ -149,6 +151,9 @@
         '<a href="#tracks"><b>Career tracks</b><span>' + M.tracks.length + ' industries, with what to master and which electives to take.</span></a>' +
         '<a href="#planner"><b>Semester planner</b><span>Check workload and what you are cleared to take next.</span></a>' +
         '<a href="#study"><b>How to study</b><span>A weekly routine, exam prep plan, and FE exam map.</span></a>' +
+        '<a href="#flashcards"><b>Flashcards</b><span>' + M.cards.length + ' formula cards that repeat on a spaced schedule.</span></a>' +
+        '<a href="#fe-plan"><b>FE exam planner</b><span>Countdown and a week-by-week study plan for the FE.</span></a>' +
+        '<a href="#careers"><b>Internship timeline</b><span>What to do each semester to land internships and a job.</span></a>' +
       '</section>' +
       '<section class="sec"><h2>Hardest required courses <span class="label">plan your semesters around these</span></h2>' +
         '<div class="grid-cards">' + hardest.map(card).join('') + '</div></section>' +
@@ -268,10 +273,13 @@
         '</section>' +
         '<section class="sec"><h2>Exams, tools and careers</h2>' +
           '<span class="label">FE Mechanical areas</span>' + (c.fe.length ? '<div class="pills">' + c.fe.map(function (f) { return '<span class="pill">' + esc(f) + '</span>'; }).join('') + '</div>' : '<p class="muted">None.</p>') +
+          '<span class="label">Grades and practice</span><p><a href="' + gradeUrl(c) + '" target="_blank" rel="noopener">Grade distributions for ' + esc(c.id) + ' by instructor</a>' +
+            (cardCount(c.id) ? ' · <a href="#flashcards" data-deck="' + esc(c.id) + '">' + plural(cardCount(c.id), 'flashcard') + '</a>' : '') + '</p>' +
           '<span class="label">Software</span>' + (c.sw.length ? '<p>' + c.sw.map(esc).join(', ') + '</p>' : '<p class="muted">None in particular.</p>') +
           '<span class="label">Career tracks that use it</span>' + (tr.length ? '<div class="pills">' + tr.map(function (t) { return '<a class="pill" href="#track-' + t.id + '">' + esc(t.name) + '</a>'; }).join('') + '</div>' : '<p class="muted">All tracks.</p>') +
         '</section>' +
       '</div>' +
+      tipsShell(c) +
       (c.kind === 'elective' ? electiveNote() : '');
   }
 
@@ -399,9 +407,10 @@
   }
 
   function viewStudy() {
-    var feRows = M.fe.map(function (area) {
+    var feRows = M.fe.map(function (row) {
+      var area = row[0];
       var cs = COURSES.filter(function (c) { return c.fe.indexOf(area) !== -1; }).sort(order);
-      return '<tr><td>' + esc(area) + '</td><td>' + cs.map(function (c) { return '<a href="' + href(c.id) + '">' + esc(c.id) + '</a>'; }).join(', ') + '</td></tr>';
+      return '<tr><td>' + esc(area) + '</td><td class="mono">' + row[1] + '–' + row[2] + '</td><td>' + cs.map(function (c) { return '<a href="' + href(c.id) + '">' + esc(c.id) + '</a>'; }).join(', ') + '</td></tr>';
     }).join('');
     return '' +
       '<section class="stack"><h1>How to study engineering</h1><p>The same system works for almost every MEEN course. Use it every week, not only before exams.</p></section>' +
@@ -441,17 +450,296 @@
         '<section class="sec"><h2>How to read difficulty and hours</h2><ul>' +
           '<li><b>Difficulty (1-5)</b> is an estimate of how hard students typically find the course, based on content load, math level and pace. It is not official data and varies by instructor.</li>' +
           '<li><b>Hours per week</b> is time outside class for a B+ or better. A common rule is 2-3 hours per credit hour; project-heavy courses (MEEN 357, 402) run higher.</li>' +
-          '<li>Check public grade-distribution reports for the course and instructor before you register.</li>' +
+          '<li>Check grade distributions for the course and instructor before you register. Each course page links to a search for them, and student tips show community ratings.</li>' +
         '</ul></section>' +
       '</div>' +
       '<section class="sec"><h2>FE exam map <span class="label">Fundamentals of Engineering, Mechanical</span></h2>' +
-        '<p>Take the FE in your final year or just after graduating, while the material is fresh. Passing makes you an Engineer in Training (EIT), the first step to a PE license. The exam provides the NCEES FE Reference Handbook; practice finding equations in it.</p>' +
-        '<div class="tablewrap"><table><thead><tr><th>Knowledge area</th><th>Courses that cover it</th></tr></thead><tbody>' + feRows + '</tbody></table></div>' +
+        '<p>Take the FE in your final year or just after graduating, while the material is fresh. Passing makes you an Engineer in Training (EIT), the first step to a PE license. The exam provides the NCEES FE Reference Handbook; practice finding equations in it. Build a study schedule in the <a href="#fe-plan">FE planner</a>.</p>' +
+        '<div class="tablewrap"><table><thead><tr><th>Knowledge area</th><th>Questions (approx.)</th><th>Courses that cover it</th></tr></thead><tbody>' + feRows + '</tbody></table></div>' +
       '</section>';
   }
 
+  /* ---------- flashcards (Leitner boxes, saved in this browser) ---------- */
+  var BOX_DAYS = [0, 1, 3, 7, 16]; // box 1..5 review interval in days
+  var DAY = 86400000;
+  function cardKey(cd) { return cd[0] + '|' + cd[1]; }
+  function cardState(cd) { return state.cards[cardKey(cd)] || { box: 0, due: 0 }; }
+  function deckCards() {
+    var deck = state.ui.deck || 'all';
+    return M.cards.filter(function (cd) { return deck === 'all' || cd[0] === deck; });
+  }
+  function dueCards() {
+    var now = Date.now();
+    return deckCards().filter(function (cd) { return cardState(cd).due <= now; })
+      .sort(function (a, b) { var sa = cardState(a), sb = cardState(b); return sa.box - sb.box || sa.due - sb.due; });
+  }
+  function viewCards() {
+    var deck = state.ui.deck || 'all';
+    var decks = [];
+    M.cards.forEach(function (cd) { if (decks.indexOf(cd[0]) === -1) decks.push(cd[0]); });
+    decks.sort(function (a, b) { return order(BY_ID[a] || { id: a }, BY_ID[b] || { id: b }); });
+    var all = deckCards(), due = dueCards(), cur = due[0];
+    var boxes = [0, 0, 0, 0, 0, 0];
+    all.forEach(function (cd) { boxes[cardState(cd).box]++; });
+    var flipped = !!state.ui.flip;
+    var next = all.map(function (cd) { return cardState(cd).due; }).filter(function (d) { return d > Date.now(); }).sort()[0];
+    return '' +
+      '<section class="stack"><h1>Formula flashcards</h1>' +
+        '<p>Key formulas and concepts from each course. Cards you know come back less often (1, 3, 7, then 16 days); cards you miss come back right away. Progress is saved in this browser.</p></section>' +
+      '<div class="row"><label for="deck" class="label">Deck</label><select id="deck"><option value="all">All courses (' + M.cards.length + ' cards)</option>' +
+        decks.map(function (d) { var n = M.cards.filter(function (cd) { return cd[0] === d; }).length; return '<option value="' + esc(d) + '"' + (deck === d ? ' selected' : '') + '>' + esc(d) + ' (' + n + ')</option>'; }).join('') +
+      '</select></div>' +
+      '<div class="load">' +
+        '<div><span class="label">Due now</span><span class="big">' + due.length + '</span></div>' +
+        '<div><span class="label">New</span><span class="big">' + boxes[0] + '</span></div>' +
+        '<div><span class="label">Learning (box 1-2)</span><span class="big">' + (boxes[1] + boxes[2]) + '</span></div>' +
+        '<div><span class="label">Known (box 3-5)</span><span class="big">' + (boxes[3] + boxes[4] + boxes[5]) + '</span></div>' +
+      '</div>' +
+      (cur ? '<section class="flash" aria-live="polite">' +
+          '<span class="label">' + esc(cur[0]) + (BY_ID[cur[0]] ? ' · ' + esc(BY_ID[cur[0]].title) : '') + '</span>' +
+          '<p class="front">' + esc(cur[1]) + '</p>' +
+          (flipped ? '<p class="back">' + esc(cur[2]) + '</p>' +
+            '<div class="row"><button type="button" class="btn ghost" data-action="card-miss">Missed it</button><button type="button" class="btn" data-action="card-got">Got it</button></div>'
+          : '<div class="row"><button type="button" class="btn" data-action="card-flip">Show answer</button></div>') +
+        '</section>'
+      : '<section class="flash"><p class="front">All caught up in this deck.</p><p class="muted">' + (next ? 'Next card is due ' + new Date(next).toLocaleDateString() + '.' : '') + ' Pick another deck or come back later.</p></section>') +
+      '<div class="row"><button type="button" class="btn ghost" data-action="card-reset">Reset progress for this deck</button></div>';
+  }
+  function gradeCard(got) {
+    var cur = dueCards()[0];
+    if (!cur) return;
+    var st = cardState(cur);
+    var box = got ? Math.min(st.box + 1, 5) : 1;
+    state.cards[cardKey(cur)] = { box: box, due: got ? Date.now() + BOX_DAYS[box - 1] * DAY + (box === 1 ? 60000 : 0) : Date.now() + 30000 };
+    state.ui.flip = false;
+    save();
+  }
+
+  /* ---------- FE exam countdown planner ---------- */
+  var CONF = { weak: 1.6, ok: 1, strong: 0.5 };
+  function feDefaults() {
+    var fe = state.fe || {};
+    if (!fe.date) {
+      var d = new Date(Date.now() + 20 * 7 * DAY);
+      fe.date = d.toISOString().slice(0, 10);
+      fe.example = true;
+    }
+    fe.hours = fe.hours || 8;
+    fe.conf = fe.conf || {};
+    return fe;
+  }
+  function viewFE() {
+    var fe = feDefaults();
+    var exam = new Date(fe.date + 'T09:00:00');
+    var days = Math.ceil((exam - Date.now()) / DAY);
+    var weeks = Math.floor(days / 7);
+    var rows = M.fe.map(function (r) {
+      var mid = (r[1] + r[2]) / 2, conf = fe.conf[r[0]] || 'ok';
+      return { area: r[0], lo: r[1], hi: r[2], w: mid * CONF[conf], conf: conf };
+    });
+    var studyWeeks = Math.max(weeks - 2, 0);
+    var totalH = studyWeeks * fe.hours, sumW = rows.reduce(function (s, r) { return s + r.w; }, 0);
+    rows.forEach(function (r) { r.h = sumW ? Math.round(totalH * r.w / sumW) : 0; });
+    // Fill weeks in plan order (follows the order you took the courses).
+    var sched = [], wk = 0, left = fe.hours, cur = [];
+    rows.forEach(function (r) {
+      var need = r.h;
+      while (need > 0 && wk < studyWeeks) {
+        var take = Math.min(need, left);
+        cur.push(r.area + ' (' + take + ' h)');
+        need -= take; left -= take;
+        if (left <= 0) { sched.push(cur); cur = []; wk++; left = fe.hours; }
+      }
+    });
+    if (cur.length && wk < studyWeeks) sched.push(cur);
+    var start = Date.now();
+    function wdate(i) { return new Date(start + i * 7 * DAY).toLocaleDateString(undefined, { month: 'short', day: 'numeric' }); }
+    var schedRows = sched.map(function (items, i) { return '<tr><td class="mono">Week ' + (i + 1) + ' · ' + wdate(i) + '</td><td>' + items.map(esc).join('<br>') + '</td></tr>'; }).join('');
+    if (weeks >= 1) {
+      schedRows += '<tr><td class="mono">Week ' + (studyWeeks + 1) + ' · ' + wdate(studyWeeks) + '</td><td>Full timed practice exam (NCEES practice exam), then review every miss.</td></tr>';
+      schedRows += '<tr><td class="mono">Final week</td><td>Second practice exam, weak-area review, and speed drills finding equations in the FE Reference Handbook. Light review the day before.</td></tr>';
+    }
+    return '' +
+      '<section class="stack"><h1>FE exam planner</h1>' +
+        '<p>Set your exam date and weekly study hours. Mark each area weak, OK or strong; the plan gives more time to areas with more questions and the ones you are weakest in, and saves the last two weeks for full practice exams.</p>' +
+        (fe.example ? '<p class="notice">Showing an example date 20 weeks from today. Set your real exam date below.</p>' : '') +
+      '</section>' +
+      '<div class="row"><label class="label" for="fe-date">Exam date</label><input type="date" id="fe-date" value="' + esc(fe.date) + '">' +
+        '<label class="label" for="fe-hours">Hours per week</label><input type="number" id="fe-hours" min="1" max="40" value="' + fe.hours + '"></div>' +
+      '<div class="load">' +
+        '<div><span class="label">Days left</span><span class="big">' + Math.max(days, 0) + '</span></div>' +
+        '<div><span class="label">Study weeks</span><span class="big">' + studyWeeks + '</span></div>' +
+        '<div><span class="label">Practice-exam weeks</span><span class="big">' + Math.min(Math.max(weeks, 0), 2) + '</span></div>' +
+        '<div><span class="label">Total study hours</span><span class="big">~' + (totalH + Math.min(Math.max(weeks, 0), 2) * fe.hours) + '</span></div>' +
+      '</div>' +
+      (days <= 0 ? '<p class="notice">That date has passed. Pick a future exam date.</p>' : weeks < 4 ? '<p class="notice">Less than a month left. Focus on the highest-weight areas and do at least one full practice exam.</p>' : '') +
+      '<section class="sec"><h2>Areas and time <span class="label">question counts are approximate (110 total)</span></h2>' +
+        '<div class="tablewrap"><table><thead><tr><th>Knowledge area</th><th>Questions</th><th>Your level</th><th>Hours</th><th>Review</th></tr></thead><tbody>' +
+        rows.map(function (r) {
+          var cs = COURSES.filter(function (c) { return c.fe.indexOf(r.area) !== -1 && c.kind !== 'elective'; }).sort(order).slice(0, 4);
+          return '<tr><td>' + esc(r.area) + '</td><td class="mono">' + r.lo + '–' + r.hi + '</td><td><select data-conf="' + esc(r.area) + '" aria-label="Your level in ' + esc(r.area) + '">' +
+            ['weak', 'ok', 'strong'].map(function (k) { return '<option value="' + k + '"' + (r.conf === k ? ' selected' : '') + '>' + (k === 'ok' ? 'OK' : k[0].toUpperCase() + k.slice(1)) + '</option>'; }).join('') +
+            '</select></td><td class="mono">' + r.h + '</td><td>' + cs.map(function (c) { return '<a href="' + href(c.id) + '">' + esc(c.id) + '</a>'; }).join(', ') + '</td></tr>';
+        }).join('') + '</tbody></table></div></section>' +
+      '<section class="sec"><h2>Week-by-week plan</h2>' +
+        (schedRows ? '<div class="tablewrap"><table><thead><tr><th>Week</th><th>Study</th></tr></thead><tbody>' + schedRows + '</tbody></table></div>' : '<p class="muted">Not enough time for a weekly plan.</p>') +
+      '</section>' +
+      '<section class="sec"><h2>Tips</h2><ul>' +
+        '<li>The FE is computer-based, about 6 hours with 110 questions. You get a searchable PDF of the NCEES FE Reference Handbook, so practice with that same PDF.</li>' +
+        '<li>Use the flashcards for formulas and the course pages to review each area.</li>' +
+        '<li>Register through NCEES and check the current exam specification for exact topic weights.</li>' +
+      '</ul></section>';
+  }
+
+  /* ---------- internship and career timeline ---------- */
+  function viewCareer() {
+    return '' +
+      '<section class="stack"><h1>Internship timeline</h1>' +
+        '<p>What to do each semester to land internships, meet the MEEN 399 high impact requirement, and graduate with a job or graduate admission. Pair it with a career track.</p></section>' +
+      '<ol class="timeline">' + M.career.map(function (t) {
+        return '<li><div class="tl-head"><span class="label">' + esc(t.term) + '</span><h3>' + esc(t.focus) + '</h3></div><ul>' +
+          t.items.map(function (i) { return '<li>' + esc(i) + '</li>'; }).join('') + '</ul></li>';
+      }).join('') + '</ol>' +
+      '<p class="notice">Career fair dates, deadlines and MEEN 399 rules change. Check the Career Center calendar and MEEN advising.</p>';
+  }
+
+  /* ---------- shared student tips (hosted version only) ---------- */
+  var tips = { db: null, user: null, me: null, canWrite: null, docs: null, status: 'off', names: {} };
+  function tipKey(id) { return slug(id); }
+  function tipsFor(id) {
+    var k = tipKey(id), out = [];
+    (tips.docs || []).forEach(function (d) {
+      var e = d.data && d.data.entries && d.data.entries[k];
+      if (e && typeof e.text === 'string') out.push({ uid: d.id, e: e });
+    });
+    return out.sort(function (a, b) { return (b.e.ts || 0) - (a.e.ts || 0); });
+  }
+  function tipsShell(c) {
+    return '<section class="sec" id="tips"><h2>Student tips <span class="label">shared with everyone who opens this guide</span></h2>' +
+      '<div id="tips-body"></div><div id="tips-form"></div></section>';
+  }
+  function renderTips() {
+    var body = document.getElementById('tips-body');
+    var formEl = document.getElementById('tips-form');
+    if (!body) return;
+    var h = location.hash.slice(1).toLowerCase();
+    var id = h.slice(7).toUpperCase().replace('-', ' ');
+    if (tips.status === 'off') {
+      body.innerHTML = '<p class="muted">Shared tips work in the hosted version of this guide on claude.ai. In this copy, use the units and resources above.</p>';
+      formEl.innerHTML = '';
+      return;
+    }
+    if (tips.status === 'loading') { body.innerHTML = '<p class="muted">Loading tips…</p>'; return; }
+    if (tips.status === 'error') { body.innerHTML = '<p class="muted">Tips could not be loaded right now. Reload the page to try again.</p>'; return; }
+    var list = tipsFor(id);
+    var ds = list.map(function (t) { return +t.e.d; }).filter(function (x) { return x >= 1 && x <= 5; });
+    var hs = list.map(function (t) { return +t.e.h; }).filter(function (x) { return x > 0 && x < 80; });
+    function avg(a) { return a.reduce(function (s, x) { return s + x; }, 0) / a.length; }
+    var summary = list.length ? '<div class="load">' +
+      '<div><span class="label">Tips</span><span class="big">' + list.length + '</span></div>' +
+      (ds.length ? '<div><span class="label">Student difficulty</span><span class="big">' + avg(ds).toFixed(1) + '/5</span></div>' : '') +
+      (hs.length ? '<div><span class="label">Student hours / week</span><span class="big">~' + Math.round(avg(hs)) + '</span></div>' : '') +
+      '</div>' : '<p class="muted">No tips yet for this course. If you have taken it, add the first one.</p>';
+    body.innerHTML = summary + '<div class="tips">' + list.map(function () {
+      return '<article class="tip"><div class="tip-head"><b></b><span class="muted"></span></div><p></p></article>';
+    }).join('') + '</div>';
+    // Fill text with textContent so tip text is never parsed as HTML.
+    var arts = body.querySelectorAll('.tip');
+    list.forEach(function (t, i) {
+      var meta = [t.e.term, t.e.prof ? 'Instructor: ' + t.e.prof : '', t.e.d ? 'Difficulty ' + t.e.d + '/5' : '', t.e.h ? '~' + t.e.h + ' h/wk' : ''].filter(Boolean).join(' · ');
+      arts[i].querySelector('b').textContent = (t.uid === tips.me ? 'You' : (tips.names[t.uid] || 'A student'));
+      arts[i].querySelector('.tip-head span').textContent = meta;
+      arts[i].querySelector('p').textContent = String(t.e.text).slice(0, 1200);
+    });
+    resolveNames(list.map(function (t) { return t.uid; }));
+    if (formEl && formEl.dataset.course !== id) renderTipForm(formEl, id);
+  }
+  function renderTipForm(formEl, id) {
+    formEl.dataset.course = id;
+    if (!tips.me || tips.canWrite === false) {
+      formEl.innerHTML = '<p class="muted">You can read tips. Adding one needs Contributor access to this guide.</p>';
+      return;
+    }
+    var mine = tipsFor(id).filter(function (t) { return t.uid === tips.me; })[0];
+    var e = mine ? mine.e : {};
+    formEl.innerHTML = '<form class="tipform" id="tipform">' +
+      '<span class="label">' + (mine ? 'Edit your tip' : 'Add your tip') + '</span>' +
+      '<textarea id="tip-text" maxlength="1200" rows="4" placeholder="What helped you most? Which units were hardest? What would you do differently?" aria-label="Your tip"></textarea>' +
+      '<div class="row">' +
+        '<label class="label" for="tip-d">Difficulty</label><select id="tip-d"><option value="">–</option>' + [1, 2, 3, 4, 5].map(function (n) { return '<option' + (+e.d === n ? ' selected' : '') + '>' + n + '</option>'; }).join('') + '</select>' +
+        '<label class="label" for="tip-h">Hours/week</label><input type="number" id="tip-h" min="0" max="60">' +
+        '<input type="text" id="tip-term" maxlength="20" placeholder="Term (e.g. Fall 2026)" aria-label="Term taken">' +
+        '<input type="text" id="tip-prof" maxlength="60" placeholder="Instructor (optional)" aria-label="Instructor">' +
+      '</div>' +
+      '<div class="row"><button class="btn" type="submit">' + (mine ? 'Save changes' : 'Post tip') + '</button>' +
+        (mine ? '<button class="btn ghost" type="button" id="tip-del">Delete my tip</button>' : '') +
+        '<span class="muted" id="tip-status" role="status"></span></div>' +
+      '</form>';
+    document.getElementById('tip-text').value = e.text || '';
+    document.getElementById('tip-h').value = e.h || '';
+    document.getElementById('tip-term').value = e.term || '';
+    document.getElementById('tip-prof').value = e.prof || '';
+  }
+  var tipBusy = false;
+  function writeTip(id, entry) {
+    if (tipBusy || !tips.db || !tips.me) return;
+    tipBusy = true;
+    var status = document.getElementById('tip-status');
+    if (status) status.textContent = 'Saving…';
+    var mineDoc = (tips.docs || []).filter(function (d) { return d.id === tips.me; })[0];
+    var entries = {};
+    var old = (mineDoc && mineDoc.data && mineDoc.data.entries) || {};
+    Object.keys(old).forEach(function (k) { entries[k] = old[k]; });
+    if (entry) entries[tipKey(id)] = entry; else delete entries[tipKey(id)];
+    tips.db.doc('tips/' + tips.me).set({ entries: entries }).then(function () {
+      tipBusy = false;
+      var f = document.getElementById('tips-form'); if (f) { f.dataset.course = ''; }
+      renderTips();
+      var s = document.getElementById('tip-status'); if (s) s.textContent = entry ? 'Saved.' : 'Deleted.';
+    }, function (err) {
+      tipBusy = false;
+      if (err && err.code === 'invalid_argument') tips.canWrite = false;
+      var s = document.getElementById('tip-status');
+      if (s) s.textContent = err && err.code === 'quota_exceeded' ? 'The tip store is full.' : 'Could not save. You may not have permission to post here.';
+    });
+  }
+  function resolveNames(ids) {
+    if (!tips.user || !ids.length) return;
+    var need = ids.filter(function (i) { return !(i in tips.names); });
+    if (!need.length) return;
+    need.forEach(function (i) { tips.names[i] = ''; });
+    tips.user.profiles(need).then(function (ps) {
+      need.forEach(function (i) { tips.names[i] = (ps && ps[i] && ps[i].name) || ''; });
+      var arts = document.querySelectorAll('#tips-body .tip b');
+      if (arts.length) renderTips();
+    }, function () {});
+  }
+  function startTips() {
+    if (!window.claude || typeof window.claude.use !== 'function') return;
+    tips.status = 'loading'; renderTips();
+    var timer = setTimeout(function () { if (tips.status === 'loading') { tips.status = 'error'; renderTips(); } }, 10000);
+    Promise.all([window.claude.use('db'), window.claude.use('user')]).then(function (r) {
+      tips.db = r[0]; tips.user = r[1];
+      if (!tips.db) { clearTimeout(timer); tips.status = 'off'; renderTips(); return; }
+      var meP = tips.user ? tips.user.id().catch(function () { return null; }) : Promise.resolve(null);
+      var canP = tips.user ? tips.user.can('data.write').catch(function () { return null; }) : Promise.resolve(null);
+      Promise.all([meP, canP]).then(function (x) {
+        tips.me = x[0]; tips.canWrite = x[1];
+        tips.db.collection('tips').onSnapshot(function (snap) {
+          clearTimeout(timer);
+          tips.docs = snap.docs.map(function (d) { return { id: d.id, data: d.data() }; });
+          tips.status = 'ready';
+          var f = document.getElementById('tips-form');
+          var typing = f && document.activeElement && f.contains(document.activeElement);
+          if (!typing && f) f.dataset.course = '';
+          renderTips();
+        }, function () { clearTimeout(timer); tips.status = 'error'; renderTips(); });
+      });
+    }, function () { clearTimeout(timer); tips.status = 'off'; renderTips(); });
+  }
+
   /* ---------- router ---------- */
-  var NAV = ['home', 'roadmap', 'courses', 'tracks', 'planner', 'study'];
+  
   function route() {
     var h = (location.hash || '#home').slice(1).toLowerCase();
     var html, tab = h;
@@ -466,12 +754,16 @@
     else if (h === 'tracks') html = viewTracks();
     else if (h === 'planner') html = viewPlanner();
     else if (h === 'study') html = viewStudy();
+    else if (h === 'flashcards') html = viewCards();
+    else if (h === 'fe-plan') { html = viewFE(); tab = 'study'; }
+    else if (h === 'careers') html = viewCareer();
     else { html = viewHome(); tab = 'home'; }
     if (h.indexOf('course-') !== 0) document.title = 'MEEN Field Guide';
     app.innerHTML = html;
     document.querySelectorAll('nav.tabs a').forEach(function (a) {
       if (a.getAttribute('href') === '#' + tab) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current');
     });
+    if (h.indexOf('course-') === 0) renderTips();
     return tab;
   }
   function rerender(keepFocusId) {
@@ -493,7 +785,18 @@
     if (chip) { state.ui[chip.dataset.set] = chip.dataset.val; save(); rerender(); return; }
     var done = t.closest('[data-done]');
     if (done && done.tagName === 'BUTTON') { toggle(state.done, done.dataset.done); edited(); rerender(); return; }
+    var deckLink = t.closest('[data-deck]');
+    if (deckLink) { state.ui.deck = deckLink.dataset.deck; state.ui.flip = false; save(); return; }
     var act = t.closest('[data-action]');
+    if (act && act.dataset.action.indexOf('card-') === 0) {
+      var a = act.dataset.action;
+      if (a === 'card-flip') state.ui.flip = true;
+      else if (a === 'card-got') gradeCard(true);
+      else if (a === 'card-miss') gradeCard(false);
+      else if (a === 'card-reset') { deckCards().forEach(function (cd) { delete state.cards[cardKey(cd)]; }); state.ui.flip = false; }
+      save(); rerender(); return;
+    }
+    if (t.id === 'tip-del') { writeTip(document.getElementById('tips-form').dataset.course, null); return; }
     if (act) {
       if (act.dataset.action === 'example') { var ui = state.ui; state = exampleState(); state.ui = ui; }
       else { state.done = []; state.plan = []; state.units = {}; state.example = false; }
@@ -521,6 +824,26 @@
     if (t.id === 'f-area') { state.ui.area = t.value; save(); rerender(); }
     if (t.id === 'f-sort') { state.ui.sort = t.value; save(); rerender(); }
     if (t.id === 'focus') { state.ui.focus = t.value; save(); rerender(); }
+    if (t.id === 'deck') { state.ui.deck = t.value; state.ui.flip = false; save(); rerender(); }
+    if (t.id === 'fe-date' && t.value) { state.fe = feDefaults(); state.fe.date = t.value; state.fe.example = false; save(); rerender(); }
+    if (t.id === 'fe-hours') { var hv = Math.min(Math.max(parseInt(t.value, 10) || 8, 1), 40); state.fe = feDefaults(); state.fe.hours = hv; save(); rerender(); }
+    if (t.dataset.conf) { state.fe = feDefaults(); state.fe.conf[t.dataset.conf] = t.value; save(); rerender(); }
+  });
+  app.addEventListener('submit', function (e) {
+    if (e.target.id !== 'tipform') return;
+    e.preventDefault();
+    var text = document.getElementById('tip-text').value.trim();
+    var st = document.getElementById('tip-status');
+    if (!text) { st.textContent = 'Write a tip before posting.'; return; }
+    var d = parseInt(document.getElementById('tip-d').value, 10), hh = parseInt(document.getElementById('tip-h').value, 10);
+    writeTip(document.getElementById('tips-form').dataset.course, {
+      text: text.slice(0, 1200),
+      d: d >= 1 && d <= 5 ? d : null,
+      h: hh > 0 && hh <= 60 ? hh : null,
+      term: document.getElementById('tip-term').value.trim().slice(0, 20),
+      prof: document.getElementById('tip-prof').value.trim().slice(0, 60),
+      ts: Date.now()
+    });
   });
   app.addEventListener('input', function (e) {
     if (e.target.id === 'q') { state.ui.q = e.target.value; save(); rerender('q'); }
@@ -531,4 +854,5 @@
   }, true);
 
   route();
+startTips();
 })();

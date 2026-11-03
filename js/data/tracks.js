@@ -139,10 +139,62 @@ window.MEEN.tracks = [
 }
 ];
 
-/* FE Mechanical exam knowledge areas (NCEES) and the courses that cover them. */
+/* FE Mechanical exam knowledge areas with the approximate number of questions
+   in each (110 questions total). Check the current NCEES exam specification. */
 window.MEEN.fe = [
-  'Mathematics', 'Probability and Statistics', 'Ethics and Professional Practice', 'Engineering Economics',
-  'Electricity and Magnetism', 'Statics', 'Dynamics, Kinematics, and Vibrations', 'Mechanics of Materials',
-  'Material Properties and Processing', 'Fluid Mechanics', 'Thermodynamics', 'Heat Transfer',
-  'Measurements, Instrumentation, and Controls', 'Mechanical Design and Analysis', 'Computational Tools'
+  ['Mathematics', 6, 9], ['Probability and Statistics', 4, 6], ['Ethics and Professional Practice', 3, 5],
+  ['Engineering Economics', 3, 5], ['Electricity and Magnetism', 5, 8], ['Statics', 9, 14],
+  ['Dynamics, Kinematics, and Vibrations', 10, 15], ['Mechanics of Materials', 9, 14],
+  ['Material Properties and Processing', 7, 11], ['Fluid Mechanics', 10, 15], ['Thermodynamics', 10, 15],
+  ['Heat Transfer', 7, 11], ['Measurements, Instrumentation, and Controls', 5, 8],
+  ['Mechanical Design and Analysis', 10, 15]
+];
+
+/* Internship and career timeline by semester. Career fair timing is typical
+   for large engineering schools; check the Career Center calendar. */
+window.MEEN.career = [
+  { term: 'First year · Fall', focus: 'Get set up', items: [
+    'Build a one-page résumé (education, projects, work, activities) and get it reviewed at the Career Center.',
+    'Go to the fall career fair just to practice talking to recruiters. Some companies hire first-year interns.',
+    'Join one engineering org (ASME, SAE, AIAA, SWE, SHPE, NSBE) and one project team.',
+    'Keep your GPA high. Many internship screens use a 3.0 cutoff.'] },
+  { term: 'First year · Spring', focus: 'First experience', items: [
+    'Apply to first-year programs (explorer internships, research programs, campus jobs in labs or makerspaces).',
+    'Make a LinkedIn profile and connect with recruiters you met.',
+    'Start learning CAD on your own (SolidWorks or Fusion 360). It gives you projects for your résumé.'] },
+  { term: 'First-year summer', focus: 'Build skills', items: [
+    'Any job that shows responsibility counts. Add a personal project (3D-printed part, Arduino build).',
+    'Get the SolidWorks CSWA certificate if you have time.'] },
+  { term: 'Second year · Fall', focus: 'Main internship search starts', items: [
+    'Apply in September and October. Many large companies fill summer internships by November.',
+    'Go to the fall career fair with a target list of 15-20 companies.',
+    'Practice behavioral interviews with STAR stories from your project team.',
+    'Plan your MEEN 399 high impact experience for the coming summer.'] },
+  { term: 'Second year · Spring', focus: 'Close the search', items: [
+    'Spring career fair: smaller and mid-size companies hire later; keep applying.',
+    'Ask professors about undergraduate research if you have no offer by March. Research counts for MEEN 399.',
+    'Line up references (professors, supervisors).'] },
+  { term: 'Second-year summer', focus: 'MEEN 399 experience', items: [
+    'Internship, co-op, research or study abroad.',
+    'Keep a weekly log of what you did, with numbers. Turn it into résumé bullets before you leave.',
+    'Ask for a return offer conversation at the end.'] },
+  { term: 'Third year · Fall', focus: 'Best internship cycle', items: [
+    'Junior-year internships most often turn into full-time offers. Apply early (August-October).',
+    'Pick a career track and choose electives to match.',
+    'Consider a co-op semester if you want deeper experience (it may delay graduation).'] },
+  { term: 'Third year · Spring', focus: 'Heaviest semester', items: [
+    'Protect study time: this term (MEEN 360, 364, 368, 461 + labs) is the heaviest on the plan.',
+    'Finish interviews early so they do not collide with exams.',
+    'Ask about the Fast Track BS/MS program if you are thinking about graduate school.'] },
+  { term: 'Third-year summer', focus: 'Convert to an offer', items: [
+    'Treat the internship as a long interview. Deliver one clear project result.',
+    'Many companies extend full-time offers at the end of this summer.'] },
+  { term: 'Fourth year · Fall', focus: 'Full-time search', items: [
+    'Apply for full-time roles in August-October; compare offers carefully (location, rotation programs, growth).',
+    'Graduate school applications are usually due December-January.',
+    'Plan your FE exam date (see the FE planner).'] },
+  { term: 'Fourth year · Spring', focus: 'Finish strong', items: [
+    'Use the capstone (MEEN 402) as your best interview story.',
+    'Take the FE exam near graduation while material is fresh.',
+    'Spring career fair for anyone still searching; many companies hire in spring too.'] }
 ];
